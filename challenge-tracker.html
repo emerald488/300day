@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>300 Day Challenge</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="300-дневный челлендж: отжимания, приседания, подтягивания, лестница и планка">
+    <meta name="theme-color" content="#667eea">
+    
+    <!-- iOS Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="300 Day Challenge">
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .day-counter {
+            font-size: 4em;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .exercises {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .exercise-item {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+        }
+
+        .exercise-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .exercise-item.completed {
+            background: rgba(76, 175, 80, 0.3);
+            border: 2px solid #4CAF50;
+        }
+
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .exercise-name {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .exercise-progress {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .progress-bar-container {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            height: 20px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .exercise-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            border: none;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+            border: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stats {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .stats h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .timer {
+            font-size: 2em;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5em;
+            animation: celebrate 1s ease-out;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        @keyframes celebrate {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .history {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .day-counter {
+                font-size: 3em;
+            }
+            
+            .exercise-controls {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💪 300 Day Challenge</h1>
+            <div class="day-counter" id="dayCounter">День 1</div>
+            <div class="subtitle">Путь к легенде начинается здесь</div>
+        </div>
+
+        <div class="exercises">
+            <!-- Отжимания -->
+            <div class="exercise-item" id="pushups-item">
+                <div class="exercise-header">
+                    <span class="exercise-name">🔥 Отжимания</span>
+                    <span class="exercise-progress" id="pushups-progress">0/1</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="pushups-bar" style="width: 0%"></div>
+                </div>
+                <div class="exercise-controls">
+                    <button onclick="addReps('pushups', 1)">+1</button>
+                    <button onclick="addReps('pushups', 5)">+5</button>
+                    <button onclick="addReps('pushups', 10)">+10</button>
+                    <button onclick="resetExercise('pushups')" class="btn-danger">Сброс</button>
+                </div>
+            </div>
+
+            <!-- Приседания -->
+            <div class="exercise-item" id="squats-item">
+                <div class="exercise-header">
+                    <span class="exercise-name">🦵 Приседания</span>
+                    <span class="exercise-progress" id="squats-progress">0/1</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="squats-bar" style="width: 0%"></div>
+                </div>
+                <div class="exercise-controls">
+                    <button onclick="addReps('squats', 1)">+1</button>
+                    <button onclick="addReps('squats', 5)">+5</button>
+                    <button onclick="addReps('squats', 10)">+10</button>
+                    <button onclick="resetExercise('squats')" class="btn-danger">Сброс</button>
+                </div>
+            </div>
+
+            <!-- Подтягивания -->
+            <div class="exercise-item" id="pullups-item">
+                <div class="exercise-header">
+                    <span class="exercise-name">💪 Подтягивания</span>
+                    <span class="exercise-progress" id="pullups-progress">0/1</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="pullups-bar" style="width: 0%"></div>
+                </div>
+                <div class="exercise-controls">
+                    <button onclick="addReps('pullups', 1)">+1</button>
+                    <button onclick="addReps('pullups', 5)">+5</button>
+                    <button onclick="addReps('pullups', 10)">+10</button>
+                    <button onclick="resetExercise('pullups')" class="btn-danger">Сброс</button>
+                </div>
+            </div>
+
+            <!-- Лестница -->
+            <div class="exercise-item" id="stairs-item">
+                <div class="exercise-header">
+                    <span class="exercise-name">🏃 Лестница (пролеты)</span>
+                    <span class="exercise-progress" id="stairs-progress">0/1</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="stairs-bar" style="width: 0%"></div>
+                </div>
+                <div class="exercise-controls">
+                    <button onclick="addReps('stairs', 1)">+1</button>
+                    <button onclick="addReps('stairs', 5)">+5</button>
+                    <button onclick="addReps('stairs', 10)">+10</button>
+                    <button onclick="addReps('stairs', 16)">+16 (полный круг)</button>
+                    <button onclick="resetExercise('stairs')" class="btn-danger">Сброс</button>
+                </div>
+            </div>
+
+            <!-- Планка -->
+            <div class="exercise-item" id="plank-item">
+                <div class="exercise-header">
+                    <span class="exercise-name">⏱️ Планка</span>
+                    <span class="exercise-progress" id="plank-progress">0:00/0:03</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="plank-bar" style="width: 0%"></div>
+                </div>
+                <div class="timer" id="plank-timer">0:00</div>
+                <div class="exercise-controls">
+                    <button onclick="startPlankTimer()" class="btn-success" id="plank-start">Старт</button>
+                    <button onclick="stopPlankTimer()" class="btn-danger hidden" id="plank-stop">Стоп</button>
+                    <button onclick="addPlankSeconds(10)">+10 сек</button>
+                    <button onclick="addPlankSeconds(30)">+30 сек</button>
+                    <button onclick="resetExercise('plank')" class="btn-danger">Сброс</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button onclick="completeDay()" class="btn-primary btn-success">✅ День выполнен! Следующий →</button>
+            <button onclick="toggleStats()" class="btn-primary">📊 Статистика</button>
+            <button onclick="toggleHistory()" class="btn-primary">📜 История</button>
+            <button onclick="resetAll()" class="btn-danger">🔄 Сброс всего</button>
+        </div>
+
+        <div class="stats hidden" id="stats">
+            <h2>📊 Общая статистика</h2>
+            <div class="stat-item">
+                <span>Всего отжиманий:</span>
+                <span id="total-pushups">0</span>
+            </div>
+            <div class="stat-item">
+                <span>Всего приседаний:</span>
+                <span id="total-squats">0</span>
+            </div>
+            <div class="stat-item">
+                <span>Всего подтягиваний:</span>
+                <span id="total-pullups">0</span>
+            </div>
+            <div class="stat-item">
+                <span>Всего пролетов:</span>
+                <span id="total-stairs">0</span>
+            </div>
+            <div class="stat-item">
+                <span>Всего планки:</span>
+                <span id="total-plank">0 мин</span>
+            </div>
+            <div class="stat-item">
+                <span>Дней подряд:</span>
+                <span id="streak">0</span>
+            </div>
+        </div>
+
+        <div class="history hidden" id="history">
+            <h2>📜 История тренировок</h2>
+            <div id="history-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // Регистрация Service Worker для PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker зарегистрирован:', registration);
+                    })
+                    .catch(error => {
+                        console.log('Ошибка регистрации Service Worker:', error);
+                    });
+            });
+        }
+
+        // Инициализация данных
+        let data = {
+            currentDay: 1,
+            exercises: {
+                pushups: { current: 0, target: 1 },
+                squats: { current: 0, target: 1 },
+                pullups: { current: 0, target: 1 },
+                stairs: { current: 0, target: 1 },
+                plank: { current: 0, target: 3 } // секунды
+            },
+            history: [],
+            totals: {
+                pushups: 0,
+                squats: 0,
+                pullups: 0,
+                stairs: 0,
+                plank: 0
+            },
+            streak: 0,
+            lastCompletedDate: null
+        };
+
+        // Таймер для планки
+        let plankInterval = null;
+        let plankStartTime = 0;
+
+        // Загрузка данных из localStorage
+        function loadData() {
+            const saved = localStorage.getItem('challengeData');
+            if (saved) {
+                data = JSON.parse(saved);
+                updateUI();
+            }
+        }
+
+        // Сохранение данных в localStorage
+        function saveData() {
+            localStorage.setItem('challengeData', JSON.stringify(data));
+        }
+
+        // Обновление UI
+        function updateUI() {
+            document.getElementById('dayCounter').textContent = `День ${data.currentDay}`;
+            
+            for (let exercise in data.exercises) {
+                const ex = data.exercises[exercise];
+                const percentage = Math.min((ex.current / ex.target) * 100, 100);
+                
+                if (exercise === 'plank') {
+                    const currentMin = Math.floor(ex.current / 60);
+                    const currentSec = ex.current % 60;
+                    const targetMin = Math.floor(ex.target / 60);
+                    const targetSec = ex.target % 60;
+                    document.getElementById(`${exercise}-progress`).textContent = 
+                        `${currentMin}:${currentSec.toString().padStart(2, '0')}/${targetMin}:${targetSec.toString().padStart(2, '0')}`;
+                } else {
+                    document.getElementById(`${exercise}-progress`).textContent = `${ex.current}/${ex.target}`;
+                }
+                
+                document.getElementById(`${exercise}-bar`).style.width = `${percentage}%`;
+                
+                // Добавляем класс completed если цель достигнута
+                const item = document.getElementById(`${exercise}-item`);
+                if (ex.current >= ex.target) {
+                    item.classList.add('completed');
+                } else {
+                    item.classList.remove('completed');
+                }
+            }
+
+            updateStats();
+        }
+
+        // Добавление повторений
+        function addReps(exercise, amount) {
+            data.exercises[exercise].current += amount;
+            if (data.exercises[exercise].current > data.exercises[exercise].target) {
+                celebrate();
+            }
+            saveData();
+            updateUI();
+        }
+
+        // Сброс упражнения
+        function resetExercise(exercise) {
+            if (confirm(`Сбросить прогресс для этого упражнения?`)) {
+                data.exercises[exercise].current = 0;
+                saveData();
+                updateUI();
+            }
+        }
+
+        // Таймер планки
+        function startPlankTimer() {
+            if (plankInterval) return;
+            
+            plankStartTime = Date.now() - (data.exercises.plank.current * 1000);
+            document.getElementById('plank-start').classList.add('hidden');
+            document.getElementById('plank-stop').classList.remove('hidden');
+            
+            plankInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - plankStartTime) / 1000);
+                data.exercises.plank.current = elapsed;
+                
+                const min = Math.floor(elapsed / 60);
+                const sec = elapsed % 60;
+                document.getElementById('plank-timer').textContent = 
+                    `${min}:${sec.toString().padStart(2, '0')}`;
+                
+                saveData();
+                updateUI();
+            }, 1000);
+        }
+
+        function stopPlankTimer() {
+            if (plankInterval) {
+                clearInterval(plankInterval);
+                plankInterval = null;
+                document.getElementById('plank-start').classList.remove('hidden');
+                document.getElementById('plank-stop').classList.add('hidden');
+            }
+        }
+
+        function addPlankSeconds(seconds) {
+            data.exercises.plank.current += seconds;
+            const min = Math.floor(data.exercises.plank.current / 60);
+            const sec = data.exercises.plank.current % 60;
+            document.getElementById('plank-timer').textContent = 
+                `${min}:${sec.toString().padStart(2, '0')}`;
+            saveData();
+            updateUI();
+        }
+
+        // Завершение дня
+        function completeDay() {
+            // Проверяем, все ли упражнения выполнены
+            let allCompleted = true;
+            for (let exercise in data.exercises) {
+                if (data.exercises[exercise].current < data.exercises[exercise].target) {
+                    allCompleted = false;
+                    break;
+                }
+            }
+
+            if (!allCompleted) {
+                if (!confirm('Не все упражнения выполнены! Все равно перейти к следующему дню?')) {
+                    return;
+                }
+            }
+
+            // Останавливаем таймер планки если он работает
+            stopPlankTimer();
+
+            // Сохраняем историю
+            const historyEntry = {
+                day: data.currentDay,
+                date: new Date().toLocaleDateString('ru-RU'),
+                exercises: JSON.parse(JSON.stringify(data.exercises))
+            };
+            data.history.unshift(historyEntry);
+            if (data.history.length > 30) {
+                data.history = data.history.slice(0, 30); // Храним последние 30 дней
+            }
+
+            // Обновляем общую статистику
+            for (let exercise in data.exercises) {
+                data.totals[exercise] += data.exercises[exercise].current;
+            }
+
+            // Обновляем серию
+            const today = new Date().toDateString();
+            if (data.lastCompletedDate) {
+                const lastDate = new Date(data.lastCompletedDate);
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                
+                if (lastDate.toDateString() === yesterday.toDateString()) {
+                    data.streak++;
+                } else if (lastDate.toDateString() !== today) {
+                    data.streak = 1;
+                }
+            } else {
+                data.streak = 1;
+            }
+            data.lastCompletedDate = today;
+
+            // Переход к следующему дню
+            data.currentDay++;
+            
+            // Обновляем цели
+            data.exercises.pushups.target = data.currentDay;
+            data.exercises.squats.target = data.currentDay;
+            data.exercises.pullups.target = data.currentDay;
+            data.exercises.stairs.target = data.currentDay;
+            data.exercises.plank.target = data.currentDay * 3;
+
+            // Сброс текущего прогресса
+            for (let exercise in data.exercises) {
+                data.exercises[exercise].current = 0;
+            }
+
+            // Сброс таймера планки
+            document.getElementById('plank-timer').textContent = '0:00';
+
+            celebrate('🎉');
+            saveData();
+            updateUI();
+        }
+
+        // Анимация празднования
+        function celebrate(emoji = '💪') {
+            const celebration = document.createElement('div');
+            celebration.className = 'celebration';
+            celebration.textContent = emoji;
+            document.body.appendChild(celebration);
+            
+            setTimeout(() => {
+                celebration.remove();
+            }, 1000);
+        }
+
+        // Обновление статистики
+        function updateStats() {
+            document.getElementById('total-pushups').textContent = data.totals.pushups;
+            document.getElementById('total-squats').textContent = data.totals.squats;
+            document.getElementById('total-pullups').textContent = data.totals.pullups;
+            document.getElementById('total-stairs').textContent = data.totals.stairs;
+            
+            const totalPlankMin = Math.floor(data.totals.plank / 60);
+            const totalPlankSec = data.totals.plank % 60;
+            document.getElementById('total-plank').textContent = 
+                `${totalPlankMin}:${totalPlankSec.toString().padStart(2, '0')} мин`;
+            
+            document.getElementById('streak').textContent = data.streak;
+        }
+
+        // Переключение статистики
+        function toggleStats() {
+            document.getElementById('stats').classList.toggle('hidden');
+            document.getElementById('history').classList.add('hidden');
+        }
+
+        // Переключение истории
+        function toggleHistory() {
+            const historyDiv = document.getElementById('history');
+            historyDiv.classList.toggle('hidden');
+            document.getElementById('stats').classList.add('hidden');
+            
+            if (!historyDiv.classList.contains('hidden')) {
+                renderHistory();
+            }
+        }
+
+        // Отрисовка истории
+        function renderHistory() {
+            const content = document.getElementById('history-content');
+            if (data.history.length === 0) {
+                content.innerHTML = '<p style="text-align: center; opacity: 0.7;">История пока пуста</p>';
+                return;
+            }
+
+            content.innerHTML = data.history.map(entry => {
+                const plankMin = Math.floor(entry.exercises.plank.current / 60);
+                const plankSec = entry.exercises.plank.current % 60;
+                
+                return `
+                    <div class="history-item">
+                        <div style="font-weight: bold; margin-bottom: 10px;">
+                            День ${entry.day} - ${entry.date}
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 0.9em;">
+                            <div>Отжимания: ${entry.exercises.pushups.current}/${entry.exercises.pushups.target}</div>
+                            <div>Приседания: ${entry.exercises.squats.current}/${entry.exercises.squats.target}</div>
+                            <div>Подтягивания: ${entry.exercises.pullups.current}/${entry.exercises.pullups.target}</div>
+                            <div>Лестница: ${entry.exercises.stairs.current}/${entry.exercises.stairs.target}</div>
+                            <div style="grid-column: 1 / -1;">Планка: ${plankMin}:${plankSec.toString().padStart(2, '0')}/${Math.floor(entry.exercises.plank.target / 60)}:${(entry.exercises.plank.target % 60).toString().padStart(2, '0')}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Полный сброс
+        function resetAll() {
+            if (confirm('⚠️ ВНИМАНИЕ! Это удалит ВСЕ данные включая историю и статистику. Продолжить?')) {
+                if (confirm('Вы уверены? Это действие нельзя отменить!')) {
+                    localStorage.removeItem('challengeData');
+                    location.reload();
+                }
+            }
+        }
+
+        // Инициализация при загрузке страницы
+        window.addEventListener('load', () => {
+            loadData();
+            updateUI();
+        });
+
+        // Остановка таймера при закрытии страницы
+        window.addEventListener('beforeunload', () => {
+            stopPlankTimer();
+        });
+    </script>
+</body>
+</html>
