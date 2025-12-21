@@ -30,10 +30,10 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #1a1a1a;
             min-height: 100vh;
             padding: 12px;
-            color: #fff;
+            color: #ffffff;
         }
 
         .container {
@@ -59,15 +59,16 @@
         }
 
         .exercises {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            background: #2d2d2d;
+            border: 1px solid #404040;
             border-radius: 16px;
             padding: 16px;
             margin-bottom: 16px;
         }
 
         .exercise-item {
-            background: rgba(255, 255, 255, 0.15);
+            background: #353535;
+            border: 1px solid #4a4a4a;
             border-radius: 12px;
             padding: 14px;
             margin-bottom: 12px;
@@ -79,7 +80,7 @@
         }
 
         .exercise-item.completed {
-            background: rgba(76, 175, 80, 0.3);
+            background: #1b5e20;
             border: 2px solid #4CAF50;
         }
 
@@ -106,7 +107,8 @@
         }
 
         .progress-bar-container {
-            background: rgba(0, 0, 0, 0.2);
+            background: #1a1a1a;
+            border: 1px solid #404040;
             border-radius: 8px;
             height: 16px;
             margin-bottom: 12px;
@@ -114,7 +116,7 @@
         }
 
         .progress-bar {
-            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            background: #2196F3;
             height: 100%;
             border-radius: 8px;
             transition: width 0.3s ease;
@@ -127,22 +129,22 @@
         }
 
         button {
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: #424242;
+            border: 1px solid #5a5a5a;
             color: white;
             padding: 10px 16px;
             border-radius: 8px;
             font-size: 0.9em;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             font-weight: 600;
             min-height: 44px;
             touch-action: manipulation;
         }
 
         button:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.05);
+            background: #4a4a4a;
+            border-color: #6a6a6a;
         }
 
         button:active {
@@ -150,20 +152,30 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
+            background: #424242;
+            border: 1px solid #5a5a5a;
             flex: 1;
             min-width: 200px;
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
-            border: none;
+            background: #4CAF50;
+            border: 1px solid #45a049;
+        }
+        
+        .btn-success:hover {
+            background: #45a049;
+            border-color: #3d8b40;
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
-            border: none;
+            background: #f44336;
+            border: 1px solid #da190b;
+        }
+        
+        .btn-danger:hover {
+            background: #da190b;
+            border-color: #c41a0c;
         }
 
         .action-buttons {
@@ -174,8 +186,8 @@
         }
 
         .stats {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            background: #2d2d2d;
+            border: 1px solid #404040;
             border-radius: 16px;
             padding: 20px;
             margin-top: 16px;
@@ -191,7 +203,7 @@
             display: flex;
             justify-content: space-between;
             padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid #404040;
             font-size: 0.95em;
         }
 
@@ -205,6 +217,7 @@
             text-align: center;
             margin: 8px 0;
             font-family: 'Courier New', monospace;
+            color: #2196F3;
         }
 
         .celebration {
@@ -234,8 +247,8 @@
         }
 
         .history {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            background: #2d2d2d;
+            border: 1px solid #404040;
             border-radius: 16px;
             padding: 20px;
             margin-top: 16px;
@@ -248,7 +261,8 @@
         }
 
         .history-item {
-            background: rgba(255, 255, 255, 0.1);
+            background: #353535;
+            border: 1px solid #4a4a4a;
             border-radius: 8px;
             padding: 12px;
             margin-bottom: 10px;
@@ -264,13 +278,14 @@
             top: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            background: #4CAF50;
             color: white;
             padding: 12px 16px;
             text-align: center;
             z-index: 9999;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
             animation: slideDown 0.3s ease-out;
+            border-bottom: 2px solid #45a049;
         }
         
         @keyframes slideDown {
