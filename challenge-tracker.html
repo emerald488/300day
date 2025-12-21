@@ -381,8 +381,13 @@
             <button onclick="completeDay()" class="btn-primary btn-success"><span style="font-size: 0.9em;">✅</span> День выполнен! Следующий →</button>
             <button onclick="toggleStats()" class="btn-primary"><span style="font-size: 0.9em;">📊</span> Статистика</button>
             <button onclick="toggleHistory()" class="btn-primary"><span style="font-size: 0.9em;">📜</span> История</button>
+            <button onclick="exportData()" class="btn-primary"><span style="font-size: 0.9em;">💾</span> Экспорт данных</button>
+            <button onclick="document.getElementById('importFile').click()" class="btn-primary"><span style="font-size: 0.9em;">📥</span> Импорт данных</button>
             <button onclick="resetAll()" class="btn-danger"><span style="font-size: 0.9em;">🔄</span> Сброс всего</button>
         </div>
+        
+        <!-- Скрытый input для импорта файла -->
+        <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
 
         <div class="stats hidden" id="stats">
             <h2><span style="font-size: 0.9em;">📊</span> Общая статистика</h2>
@@ -722,6 +727,69 @@
                     location.reload();
                 }
             }
+        }
+
+        // Экспорт данных
+        function exportData() {
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            
+            const date = new Date().toISOString().split('T')[0];
+            link.download = `300-challenge-backup-${date}.json`;
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            alert('✅ Данные экспортированы! Файл сохранен в Downloads.');
+        }
+
+        // Импорт данных
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    // Проверяем что это правильный формат данных
+                    if (!importedData.currentDay || !importedData.exercises) {
+                        alert('❌ Ошибка: Неверный формат файла!');
+                        return;
+                    }
+                    
+                    if (confirm('⚠️ ВНИМАНИЕ! Это заменит все текущие данные. Продолжить?')) {
+                        data = importedData;
+                        saveData();
+                        updateUI();
+                        alert('✅ Данные успешно импортированы!');
+                        
+                        // Останавливаем таймер планки если он был запущен
+                        stopPlankTimer();
+                        
+                        // Обновляем таймер планки
+                        const plankCurrent = data.exercises.plank.current;
+                        const min = Math.floor(plankCurrent / 60);
+                        const sec = plankCurrent % 60;
+                        document.getElementById('plank-timer').textContent = 
+                            `${min}:${sec.toString().padStart(2, '0')}`;
+                    }
+                } catch (error) {
+                    alert('❌ Ошибка при чтении файла: ' + error.message);
+                }
+            };
+            
+            reader.readAsText(file);
+            
+            // Сбрасываем input чтобы можно было загрузить тот же файл снова
+            event.target.value = '';
         }
 
         // Инициализация при загрузке страницы
