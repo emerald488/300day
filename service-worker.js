@@ -1,4 +1,4 @@
-const CACHE_NAME = '300-challenge-v1';
+const CACHE_NAME = '300-challenge-v2';
 const urlsToCache = [
   './challenge-tracker.html',
   './manifest.json'
@@ -6,6 +6,9 @@ const urlsToCache = [
 
 // Установка Service Worker и кеширование файлов
 self.addEventListener('install', event => {
+  // Пропускаем ожидание и сразу активируемся
+  self.skipWaiting();
+  
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
@@ -27,6 +30,9 @@ self.addEventListener('activate', event => {
           }
         })
       );
+    }).then(() => {
+      // Берем контроль над всеми открытыми страницами
+      return self.clients.claim();
     })
   );
 });
@@ -36,11 +42,30 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Возвращаем из кеша если есть, иначе делаем сетевой запрос
-        if (response) {
+        // Запрашиваем свежую версию с сервера
+        const fetchPromise = fetch(event.request).then(networkResponse => {
+          // Если получили ответ, обновляем кеш
+          if (networkResponse && networkResponse.status === 200) {
+            const responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME).then(cache => {
+              cache.put(event.request, responseToCache);
+            });
+          }
+          return networkResponse;
+        }).catch(() => {
+          // Если сеть недоступна, используем кеш
           return response;
-        }
-        return fetch(event.request);
+        });
+        
+        // Возвращаем из кеша если есть, иначе ждем сетевой запрос
+        return response || fetchPromise;
       })
   );
+});
+
+// Уведомление клиентов о доступном обновлении
+self.addEventListener('message', event => {
+  if (event.data.action === 'skipWaiting') {
+    self.skipWaiting();
+  }
 });
