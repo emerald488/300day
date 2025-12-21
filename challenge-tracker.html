@@ -29,10 +29,10 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 12px;
             color: #fff;
         }
 
@@ -43,34 +43,34 @@
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .day-counter {
-            font-size: 4em;
+            font-size: 2.5em;
             font-weight: bold;
-            margin: 20px 0;
+            margin: 10px 0;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .subtitle {
-            font-size: 1.2em;
+            font-size: 0.95em;
             opacity: 0.9;
         }
 
         .exercises {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 20px;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
         }
 
         .exercise-item {
             background: rgba(255, 255, 255, 0.15);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
             transition: transform 0.2s;
         }
 
@@ -87,37 +87,42 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .exercise-name {
-            font-size: 1.5em;
-            font-weight: bold;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        
+        .exercise-name::before {
+            font-size: 0.9em;
+            margin-right: 6px;
         }
 
         .exercise-progress {
-            font-size: 1.8em;
+            font-size: 1.3em;
             font-weight: bold;
         }
 
         .progress-bar-container {
             background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            height: 20px;
-            margin-bottom: 15px;
+            border-radius: 8px;
+            height: 16px;
+            margin-bottom: 12px;
             overflow: hidden;
         }
 
         .progress-bar {
             background: linear-gradient(90deg, #4CAF50, #8BC34A);
             height: 100%;
-            border-radius: 10px;
+            border-radius: 8px;
             transition: width 0.3s ease;
         }
 
         .exercise-controls {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
@@ -125,12 +130,14 @@
             background: rgba(255, 255, 255, 0.2);
             border: 2px solid rgba(255, 255, 255, 0.3);
             color: white;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-size: 1em;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.9em;
             cursor: pointer;
             transition: all 0.3s;
-            font-weight: bold;
+            font-weight: 600;
+            min-height: 44px;
+            touch-action: manipulation;
         }
 
         button:hover {
@@ -161,29 +168,31 @@
 
         .action-buttons {
             display: flex;
-            gap: 15px;
-            margin-top: 20px;
+            gap: 10px;
+            margin-top: 16px;
             flex-wrap: wrap;
         }
 
         .stats {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-top: 20px;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 16px;
         }
 
         .stats h2 {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             text-align: center;
+            font-size: 1.3em;
         }
 
         .stat-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
+            padding: 8px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.95em;
         }
 
         .stat-item:last-child {
@@ -191,10 +200,10 @@
         }
 
         .timer {
-            font-size: 2em;
+            font-size: 1.6em;
             font-weight: bold;
             text-align: center;
-            margin: 10px 0;
+            margin: 8px 0;
             font-family: 'Courier New', monospace;
         }
 
@@ -227,18 +236,23 @@
         .history {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-top: 20px;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 16px;
             max-height: 400px;
             overflow-y: auto;
+        }
+        
+        .history h2 {
+            font-size: 1.3em;
         }
 
         .history-item {
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
+            border-radius: 8px;
+            padding: 12px;
             margin-bottom: 10px;
+            font-size: 0.9em;
         }
 
         .hidden {
@@ -247,15 +261,20 @@
 
         @media (max-width: 600px) {
             .day-counter {
-                font-size: 3em;
+                font-size: 2.2em;
             }
             
             .exercise-controls {
-                flex-direction: column;
+                gap: 6px;
             }
             
             button {
-                width: 100%;
+                font-size: 0.85em;
+                padding: 8px 12px;
+            }
+            
+            .btn-primary {
+                font-size: 0.9em;
             }
         }
     </style>
@@ -263,7 +282,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>💪 300 Day Challenge</h1>
+            <h1 style="font-size: 1.4em; margin-bottom: 8px;">💪 300 Day Challenge</h1>
             <div class="day-counter" id="dayCounter">День 1</div>
             <div class="subtitle">Путь к легенде начинается здесь</div>
         </div>
@@ -272,7 +291,7 @@
             <!-- Отжимания -->
             <div class="exercise-item" id="pushups-item">
                 <div class="exercise-header">
-                    <span class="exercise-name">🔥 Отжимания</span>
+                    <span class="exercise-name"><span style="font-size: 0.9em;">🔥</span> Отжимания</span>
                     <span class="exercise-progress" id="pushups-progress">0/1</span>
                 </div>
                 <div class="progress-bar-container">
@@ -289,7 +308,7 @@
             <!-- Приседания -->
             <div class="exercise-item" id="squats-item">
                 <div class="exercise-header">
-                    <span class="exercise-name">🦵 Приседания</span>
+                    <span class="exercise-name"><span style="font-size: 0.9em;">🦵</span> Приседания</span>
                     <span class="exercise-progress" id="squats-progress">0/1</span>
                 </div>
                 <div class="progress-bar-container">
@@ -306,7 +325,7 @@
             <!-- Подтягивания -->
             <div class="exercise-item" id="pullups-item">
                 <div class="exercise-header">
-                    <span class="exercise-name">💪 Подтягивания</span>
+                    <span class="exercise-name"><span style="font-size: 0.9em;">💪</span> Подтягивания</span>
                     <span class="exercise-progress" id="pullups-progress">0/1</span>
                 </div>
                 <div class="progress-bar-container">
@@ -323,7 +342,7 @@
             <!-- Лестница -->
             <div class="exercise-item" id="stairs-item">
                 <div class="exercise-header">
-                    <span class="exercise-name">🏃 Лестница (пролеты)</span>
+                    <span class="exercise-name"><span style="font-size: 0.9em;">🏃</span> Лестница (пролеты)</span>
                     <span class="exercise-progress" id="stairs-progress">0/1</span>
                 </div>
                 <div class="progress-bar-container">
@@ -341,7 +360,7 @@
             <!-- Планка -->
             <div class="exercise-item" id="plank-item">
                 <div class="exercise-header">
-                    <span class="exercise-name">⏱️ Планка</span>
+                    <span class="exercise-name"><span style="font-size: 0.9em;">⏱️</span> Планка</span>
                     <span class="exercise-progress" id="plank-progress">0:00/0:03</span>
                 </div>
                 <div class="progress-bar-container">
@@ -359,14 +378,14 @@
         </div>
 
         <div class="action-buttons">
-            <button onclick="completeDay()" class="btn-primary btn-success">✅ День выполнен! Следующий →</button>
-            <button onclick="toggleStats()" class="btn-primary">📊 Статистика</button>
-            <button onclick="toggleHistory()" class="btn-primary">📜 История</button>
-            <button onclick="resetAll()" class="btn-danger">🔄 Сброс всего</button>
+            <button onclick="completeDay()" class="btn-primary btn-success"><span style="font-size: 0.9em;">✅</span> День выполнен! Следующий →</button>
+            <button onclick="toggleStats()" class="btn-primary"><span style="font-size: 0.9em;">📊</span> Статистика</button>
+            <button onclick="toggleHistory()" class="btn-primary"><span style="font-size: 0.9em;">📜</span> История</button>
+            <button onclick="resetAll()" class="btn-danger"><span style="font-size: 0.9em;">🔄</span> Сброс всего</button>
         </div>
 
         <div class="stats hidden" id="stats">
-            <h2>📊 Общая статистика</h2>
+            <h2><span style="font-size: 0.9em;">📊</span> Общая статистика</h2>
             <div class="stat-item">
                 <span>Всего отжиманий:</span>
                 <span id="total-pushups">0</span>
@@ -394,7 +413,7 @@
         </div>
 
         <div class="history hidden" id="history">
-            <h2>📜 История тренировок</h2>
+            <h2><span style="font-size: 0.9em;">📜</span> История тренировок</h2>
             <div id="history-content"></div>
         </div>
     </div>
