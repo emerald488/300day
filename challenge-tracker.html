@@ -264,6 +264,70 @@
         .hidden {
             display: none;
         }
+
+        .settings-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .settings-overlay:not(.hidden) {
+            display: flex;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .settings-panel {
+            background: #2d2d2d;
+            border: 1px solid #404040;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 400px;
+            width: 90%;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .settings-panel h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.3em;
+        }
+
+        .settings-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .settings-buttons button {
+            width: 100%;
+        }
         
         .update-notification {
             position: fixed;
@@ -432,9 +496,7 @@
             <button onclick="completeDay()" class="btn-primary btn-success"><span style="font-size: 0.9em;">✅</span> День выполнен! Следующий →</button>
             <button onclick="toggleStats()" class="btn-primary"><span style="font-size: 0.9em;">📊</span> Статистика</button>
             <button onclick="toggleHistory()" class="btn-primary"><span style="font-size: 0.9em;">📜</span> История</button>
-            <button onclick="exportData()" class="btn-primary"><span style="font-size: 0.9em;">💾</span> Экспорт данных</button>
-            <button onclick="document.getElementById('importFile').click()" class="btn-primary"><span style="font-size: 0.9em;">📥</span> Импорт данных</button>
-            <button onclick="resetAll()" class="btn-danger"><span style="font-size: 0.9em;">🔄</span> Сброс всего</button>
+            <button onclick="toggleSettings()" class="btn-primary"><span style="font-size: 0.9em;">⚙️</span> Настройки</button>
         </div>
         
         <!-- Скрытый input для импорта файла -->
@@ -471,6 +533,19 @@
         <div class="history hidden" id="history">
             <h2><span style="font-size: 0.9em;">📜</span> История тренировок</h2>
             <div id="history-content"></div>
+        </div>
+    </div>
+
+    <!-- Панель настроек -->
+    <div id="settingsOverlay" class="settings-overlay hidden" onclick="closeSettingsOnOverlay(event)">
+        <div class="settings-panel" onclick="event.stopPropagation()">
+            <h2><span style="font-size: 0.9em;">⚙️</span> Настройки</h2>
+            <div class="settings-buttons">
+                <button onclick="exportData()" class="btn-primary"><span style="font-size: 0.9em;">💾</span> Экспорт данных</button>
+                <button onclick="document.getElementById('importFile').click()" class="btn-primary"><span style="font-size: 0.9em;">📥</span> Импорт данных</button>
+                <button onclick="resetAll()" class="btn-danger"><span style="font-size: 0.9em;">🔄</span> Сброс всего</button>
+                <button onclick="toggleSettings()" class="btn-primary" style="margin-top: 12px;">Закрыть</button>
+            </div>
         </div>
     </div>
 
@@ -775,9 +850,22 @@
             const historyDiv = document.getElementById('history');
             historyDiv.classList.toggle('hidden');
             document.getElementById('stats').classList.add('hidden');
-            
+
             if (!historyDiv.classList.contains('hidden')) {
                 renderHistory();
+            }
+        }
+
+        // Переключение панели настроек
+        function toggleSettings() {
+            const overlay = document.getElementById('settingsOverlay');
+            overlay.classList.toggle('hidden');
+        }
+
+        // Закрытие настроек при клике на затемненную область
+        function closeSettingsOnOverlay(event) {
+            if (event.target === event.currentTarget) {
+                toggleSettings();
             }
         }
 
@@ -824,19 +912,20 @@
         function exportData() {
             const dataStr = JSON.stringify(data, null, 2);
             const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            
+
             const url = URL.createObjectURL(dataBlob);
             const link = document.createElement('a');
             link.href = url;
-            
+
             const date = new Date().toISOString().split('T')[0];
             link.download = `300-challenge-backup-${date}.json`;
-            
+
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
-            
+
+            toggleSettings();
             alert('✅ Данные экспортированы! Файл сохранен в Downloads.');
         }
 
@@ -860,16 +949,17 @@
                         data = importedData;
                         saveData();
                         updateUI();
+                        toggleSettings();
                         alert('✅ Данные успешно импортированы!');
-                        
+
                         // Останавливаем таймер планки если он был запущен
                         stopPlankTimer();
-                        
+
                         // Обновляем таймер планки
                         const plankCurrent = data.exercises.plank.current;
                         const min = Math.floor(plankCurrent / 60);
                         const sec = plankCurrent % 60;
-                        document.getElementById('plank-timer').textContent = 
+                        document.getElementById('plank-timer').textContent =
                             `${min}:${sec.toString().padStart(2, '0')}`;
                     }
                 } catch (error) {
