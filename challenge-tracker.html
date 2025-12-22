@@ -43,19 +43,26 @@
 
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            margin-bottom: 40px;
         }
 
         .day-counter {
-            font-size: 2.5em;
+            font-size: 3.5em;
             font-weight: bold;
-            margin: 10px 0;
+            margin: 30px 0;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .subtitle {
-            font-size: 0.95em;
+            font-size: 1.2em;
             opacity: 0.9;
+            margin-top: 20px;
         }
 
         .exercise-item {
@@ -687,8 +694,21 @@
         }
 
         @media (max-width: 600px) {
+            .header {
+                padding: 30px 15px;
+            }
+
+            .header h1 {
+                font-size: 1.5em !important;
+            }
+
             .day-counter {
-                font-size: 2.2em;
+                font-size: 2.8em;
+                margin: 20px 0;
+            }
+
+            .subtitle {
+                font-size: 1em;
             }
 
             .exercise-controls {
@@ -810,7 +830,7 @@
     
     <div class="container">
         <div class="header">
-            <h1 style="font-size: 1.4em; margin-bottom: 8px;">💪 300 Day Challenge</h1>
+            <h1 style="font-size: 2em; margin-bottom: 20px;">💪 300 Day Challenge</h1>
             <div class="day-counter" id="dayCounter">День 1</div>
             <div class="subtitle">Путь к легенде начинается здесь</div>
         </div>
