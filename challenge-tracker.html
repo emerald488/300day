@@ -466,27 +466,296 @@
             background: rgba(255, 255, 255, 0.9);
         }
 
+        /* Stories */
+        .stories-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .stories-overlay.hidden {
+            display: none !important;
+        }
+
+        .stories-container {
+            width: 100%;
+            max-width: 500px;
+            height: 100%;
+            max-height: 800px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 30px;
+            box-sizing: border-box;
+        }
+
+        .stories-progress {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+
+        .story-progress-bar {
+            flex: 1;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .story-progress-fill {
+            height: 100%;
+            background: white;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .story-progress-bar.active .story-progress-fill {
+            width: 100%;
+        }
+
+        .story-progress-bar.completed .story-progress-fill {
+            width: 100%;
+        }
+
+        .stories-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        .story-slide {
+            display: none;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        .story-slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .story-emoji {
+            font-size: 5em;
+            margin-bottom: 30px;
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .story-title {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .story-description {
+            font-size: 1.1em;
+            line-height: 1.6;
+            opacity: 0.95;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .stories-controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .story-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .story-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .story-btn.primary {
+            background: white;
+            color: #667eea;
+            border-color: white;
+        }
+
+        .story-btn.primary:hover {
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-2px);
+        }
+
+        .story-skip {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s;
+        }
+
+        .story-skip:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
         @media (max-width: 600px) {
             .day-counter {
                 font-size: 2.2em;
             }
-            
+
             .exercise-controls {
                 gap: 6px;
             }
-            
+
             button {
                 font-size: 0.85em;
                 padding: 8px 12px;
             }
-            
+
             .btn-primary {
                 font-size: 0.9em;
+            }
+
+            .stories-container {
+                padding: 30px 20px;
+            }
+
+            .story-emoji {
+                font-size: 4em;
+            }
+
+            .story-title {
+                font-size: 1.6em;
+            }
+
+            .story-description {
+                font-size: 1em;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Stories Overlay -->
+    <div id="storiesOverlay" class="stories-overlay hidden">
+        <div class="stories-container">
+            <button class="story-skip" onclick="skipStories()">Пропустить</button>
+
+            <div class="stories-progress">
+                <div class="story-progress-bar" id="progress-0">
+                    <div class="story-progress-fill"></div>
+                </div>
+                <div class="story-progress-bar" id="progress-1">
+                    <div class="story-progress-fill"></div>
+                </div>
+                <div class="story-progress-bar" id="progress-2">
+                    <div class="story-progress-fill"></div>
+                </div>
+                <div class="story-progress-bar" id="progress-3">
+                    <div class="story-progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="stories-content">
+                <!-- Story 1 -->
+                <div class="story-slide active" id="story-0">
+                    <div>
+                        <div class="story-emoji">💪</div>
+                        <div class="story-title">Каждый день — это шаг</div>
+                        <div class="story-description">
+                            Сегодня одно повторение, завтра — два, через неделю — семь.
+                            Маленькие шаги складываются в большой путь.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Story 2 -->
+                <div class="story-slide" id="story-1">
+                    <div>
+                        <div class="story-emoji">🔥</div>
+                        <div class="story-title">100 дней — 100 повторений</div>
+                        <div class="story-description">
+                            На сотый день ты выполнишь сотню отжиманий, приседаний и подтягиваний за раз.
+                            Представь свою силу через 100 дней!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Story 3 -->
+                <div class="story-slide" id="story-2">
+                    <div>
+                        <div class="story-emoji">⚡</div>
+                        <div class="story-title">300 дней — 300 повторений</div>
+                        <div class="story-description">
+                            К финалу твоё тело преодолеет барьер в 300 повторений каждого упражнения
+                            и 15 минут планки. Это не просто цифры — это трансформация.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Story 4 -->
+                <div class="story-slide" id="story-3">
+                    <div>
+                        <div class="story-emoji">🏆</div>
+                        <div class="story-title">Стань легендой</div>
+                        <div class="story-description">
+                            Железная дисциплина, несгибаемая воля и тело, способное на то,
+                            о чём ты раньше только мечтал. Начни прямо сейчас!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stories-controls">
+                <button class="story-btn" id="prevBtn" onclick="previousStory()" style="display: none;">Назад</button>
+                <button class="story-btn primary" id="nextBtn" onclick="nextStory()">Далее</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Уведомление об обновлении -->
     <div id="updateNotification" class="update-notification hidden">
         <span style="font-size: 0.9em;">🔄</span> Доступно обновление приложения!
@@ -1266,10 +1535,109 @@
             await sendTelegramMessage(message);
         }
 
+        // ========== STORIES ФУНКЦИИ ==========
+
+        let currentStoryIndex = 0;
+        const totalStories = 4;
+
+        // Проверка, показывали ли уже сториз
+        function checkStoriesShown() {
+            // Показываем сториз при каждом открытии
+            showStories();
+        }
+
+        // Показать сториз
+        function showStories() {
+            document.getElementById('storiesOverlay').classList.remove('hidden');
+            updateStoryUI();
+        }
+
+        // Следующая история
+        function nextStory() {
+            if (currentStoryIndex < totalStories - 1) {
+                // Отметить текущую как завершенную
+                document.getElementById(`progress-${currentStoryIndex}`).classList.add('completed');
+                document.getElementById(`story-${currentStoryIndex}`).classList.remove('active');
+
+                currentStoryIndex++;
+
+                // Показать следующую
+                document.getElementById(`progress-${currentStoryIndex}`).classList.add('active');
+                document.getElementById(`story-${currentStoryIndex}`).classList.add('active');
+
+                updateStoryUI();
+            } else {
+                // Последняя история - закрываем
+                finishStories();
+            }
+        }
+
+        // Предыдущая история
+        function previousStory() {
+            if (currentStoryIndex > 0) {
+                // Убрать активность с текущей
+                document.getElementById(`progress-${currentStoryIndex}`).classList.remove('active', 'completed');
+                document.getElementById(`story-${currentStoryIndex}`).classList.remove('active');
+
+                currentStoryIndex--;
+
+                // Вернуться к предыдущей
+                document.getElementById(`progress-${currentStoryIndex}`).classList.remove('completed');
+                document.getElementById(`progress-${currentStoryIndex}`).classList.add('active');
+                document.getElementById(`story-${currentStoryIndex}`).classList.add('active');
+
+                updateStoryUI();
+            }
+        }
+
+        // Обновление UI сториз
+        function updateStoryUI() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            // Показать/скрыть кнопку "Назад"
+            if (currentStoryIndex === 0) {
+                prevBtn.style.display = 'none';
+            } else {
+                prevBtn.style.display = 'block';
+            }
+
+            // Изменить текст кнопки "Далее" на последней истории
+            if (currentStoryIndex === totalStories - 1) {
+                nextBtn.textContent = 'Начать челлендж!';
+            } else {
+                nextBtn.textContent = 'Далее';
+            }
+        }
+
+        // Пропустить сториз
+        function skipStories() {
+            finishStories();
+        }
+
+        // Завершить показ сториз
+        function finishStories() {
+            document.getElementById('storiesOverlay').classList.add('hidden');
+
+            // Сбросить на начало для следующего показа
+            currentStoryIndex = 0;
+
+            // Очистить все состояния
+            for (let i = 0; i < totalStories; i++) {
+                document.getElementById(`progress-${i}`).classList.remove('active', 'completed');
+                document.getElementById(`story-${i}`).classList.remove('active');
+            }
+
+            // Установить первую историю как активную для следующего показа
+            document.getElementById('progress-0').classList.add('active');
+            document.getElementById('story-0').classList.add('active');
+        }
+
         // Инициализация при загрузке страницы
         window.addEventListener('load', () => {
             loadData();
             updateUI();
+            checkStoriesShown();
         });
 
         // Остановка таймера при закрытии страницы
