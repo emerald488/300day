@@ -329,6 +329,103 @@
         .settings-buttons button {
             width: 100%;
         }
+
+        .telegram-setup {
+            background: #2d2d2d;
+            border: 1px solid #404040;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .telegram-setup h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.3em;
+        }
+
+        .telegram-setup h3 {
+            margin-top: 20px;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            color: #2196F3;
+        }
+
+        .telegram-setup ol {
+            margin-left: 20px;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .telegram-setup li {
+            margin-bottom: 8px;
+        }
+
+        .telegram-setup code {
+            background: #424242;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .telegram-setup a {
+            color: #2196F3;
+            text-decoration: none;
+        }
+
+        .telegram-setup a:hover {
+            text-decoration: underline;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: #353535;
+            border: 1px solid #4a4a4a;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.95em;
+            font-family: 'Courier New', monospace;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #2196F3;
+        }
+
+        .telegram-status {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .telegram-status.connected {
+            background: #1b5e20;
+            border: 1px solid #4CAF50;
+        }
+
+        .telegram-status.disconnected {
+            background: #424242;
+            border: 1px solid #5a5a5a;
+        }
         
         .update-notification {
             position: fixed;
@@ -542,10 +639,48 @@
         <div class="settings-panel" onclick="event.stopPropagation()">
             <h2><span style="font-size: 0.9em;">⚙️</span> Настройки</h2>
             <div class="settings-buttons">
+                <button onclick="openTelegramSetup()" class="btn-primary"><span style="font-size: 0.9em;">📱</span> Подключить Telegram</button>
                 <button onclick="exportData()" class="btn-primary"><span style="font-size: 0.9em;">💾</span> Экспорт данных</button>
                 <button onclick="document.getElementById('importFile').click()" class="btn-primary"><span style="font-size: 0.9em;">📥</span> Импорт данных</button>
                 <button onclick="resetAll()" class="btn-danger"><span style="font-size: 0.9em;">🔄</span> Сброс всего</button>
                 <button onclick="toggleSettings()" class="btn-primary" style="margin-top: 12px;">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Панель настройки Telegram -->
+    <div id="telegramSetupOverlay" class="settings-overlay hidden" onclick="closeTelegramSetupOnOverlay(event)">
+        <div class="telegram-setup" onclick="event.stopPropagation()">
+            <h2><span style="font-size: 0.9em;">📱</span> Настройка Telegram</h2>
+
+            <div id="telegramStatusDisplay" class="telegram-status disconnected">
+                Telegram не подключен
+            </div>
+
+            <h3>📋 Инструкция:</h3>
+            <ol style="font-size: 0.9em;">
+                <li>Открой Telegram и найди бота <a href="https://t.me/botfather" target="_blank">@BotFather</a></li>
+                <li>Отправь команду <code>/newbot</code> и следуй инструкциям</li>
+                <li>Скопируй полученный токен (выглядит как <code>123456:ABC-DEF...</code>)</li>
+                <li>Найди бота <a href="https://t.me/userinfobot" target="_blank">@userinfobot</a></li>
+                <li>Отправь ему любое сообщение, он пришлет твой Chat ID</li>
+                <li>Введи токен и Chat ID в поля ниже</li>
+            </ol>
+
+            <div class="form-group">
+                <label for="botToken">Токен бота:</label>
+                <input type="text" id="botToken" placeholder="123456789:ABCdefGHIjklMNOpqrsTUVwxyz" autocomplete="off">
+            </div>
+
+            <div class="form-group">
+                <label for="chatId">Chat ID:</label>
+                <input type="text" id="chatId" placeholder="123456789" autocomplete="off">
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+                <button onclick="saveTelegramSettings()" class="btn-success">Сохранить и проверить</button>
+                <button onclick="disconnectTelegram()" class="btn-danger">Отключить Telegram</button>
+                <button onclick="toggleTelegramSetup()" class="btn-primary">Закрыть</button>
             </div>
         </div>
     </div>
@@ -626,6 +761,13 @@
             lastCompletedDate: null
         };
 
+        // Настройки Telegram
+        let telegramSettings = {
+            botToken: '',
+            chatId: '',
+            enabled: false
+        };
+
         // Таймер для планки
         let plankInterval = null;
         let plankStartTime = 0;
@@ -636,6 +778,12 @@
             if (saved) {
                 data = JSON.parse(saved);
                 updateUI();
+            }
+
+            const savedTelegram = localStorage.getItem('telegramSettings');
+            if (savedTelegram) {
+                telegramSettings = JSON.parse(savedTelegram);
+                updateTelegramStatus();
             }
         }
 
@@ -811,6 +959,9 @@
             celebrate('🎉');
             saveData();
             updateUI();
+
+            // Отправляем уведомление в Telegram
+            sendDayCompletedNotification(data.currentDay - 1, historyEntry);
         }
 
         // Анимация празднования
@@ -972,6 +1123,147 @@
             
             // Сбрасываем input чтобы можно было загрузить тот же файл снова
             event.target.value = '';
+        }
+
+        // ========== TELEGRAM ФУНКЦИИ ==========
+
+        // Открытие панели настройки Telegram
+        function openTelegramSetup() {
+            toggleSettings(); // Закрываем настройки
+            toggleTelegramSetup(); // Открываем Telegram настройки
+
+            // Заполняем поля если данные уже есть
+            if (telegramSettings.botToken) {
+                document.getElementById('botToken').value = telegramSettings.botToken;
+            }
+            if (telegramSettings.chatId) {
+                document.getElementById('chatId').value = telegramSettings.chatId;
+            }
+        }
+
+        // Переключение панели Telegram
+        function toggleTelegramSetup() {
+            const overlay = document.getElementById('telegramSetupOverlay');
+            overlay.classList.toggle('hidden');
+        }
+
+        // Закрытие при клике на затемненную область
+        function closeTelegramSetupOnOverlay(event) {
+            if (event.target === event.currentTarget) {
+                toggleTelegramSetup();
+            }
+        }
+
+        // Обновление статуса подключения
+        function updateTelegramStatus() {
+            const statusDisplay = document.getElementById('telegramStatusDisplay');
+            if (telegramSettings.enabled && telegramSettings.botToken && telegramSettings.chatId) {
+                statusDisplay.className = 'telegram-status connected';
+                statusDisplay.textContent = '✅ Telegram подключен';
+            } else {
+                statusDisplay.className = 'telegram-status disconnected';
+                statusDisplay.textContent = 'Telegram не подключен';
+            }
+        }
+
+        // Отправка сообщения в Telegram
+        async function sendTelegramMessage(message) {
+            if (!telegramSettings.enabled || !telegramSettings.botToken || !telegramSettings.chatId) {
+                return false;
+            }
+
+            const url = `https://api.telegram.org/bot${telegramSettings.botToken}/sendMessage`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: telegramSettings.chatId,
+                        text: message,
+                        parse_mode: 'HTML'
+                    })
+                });
+
+                const result = await response.json();
+                return result.ok;
+            } catch (error) {
+                console.error('Ошибка отправки в Telegram:', error);
+                return false;
+            }
+        }
+
+        // Сохранение настроек Telegram
+        async function saveTelegramSettings() {
+            const botToken = document.getElementById('botToken').value.trim();
+            const chatId = document.getElementById('chatId').value.trim();
+
+            if (!botToken || !chatId) {
+                alert('❌ Пожалуйста, заполните оба поля!');
+                return;
+            }
+
+            // Временно сохраняем настройки
+            telegramSettings.botToken = botToken;
+            telegramSettings.chatId = chatId;
+            telegramSettings.enabled = true;
+
+            // Проверяем подключение отправкой тестового сообщения
+            const testMessage = '🎉 Telegram успешно подключен к 300 Day Challenge!\n\nТеперь ты будешь получать уведомления о своих тренировках.';
+
+            const success = await sendTelegramMessage(testMessage);
+
+            if (success) {
+                localStorage.setItem('telegramSettings', JSON.stringify(telegramSettings));
+                updateTelegramStatus();
+                alert('✅ Telegram успешно подключен! Проверь свой Telegram, там должно быть тестовое сообщение.');
+            } else {
+                telegramSettings.enabled = false;
+                alert('❌ Ошибка подключения! Проверь правильность токена и Chat ID.');
+            }
+        }
+
+        // Отключение Telegram
+        function disconnectTelegram() {
+            if (confirm('Отключить Telegram уведомления?')) {
+                telegramSettings = {
+                    botToken: '',
+                    chatId: '',
+                    enabled: false
+                };
+                localStorage.removeItem('telegramSettings');
+                document.getElementById('botToken').value = '';
+                document.getElementById('chatId').value = '';
+                updateTelegramStatus();
+                alert('✅ Telegram отключен');
+            }
+        }
+
+        // Отправка уведомления о завершении дня
+        async function sendDayCompletedNotification(completedDay, historyEntry) {
+            if (!telegramSettings.enabled) return;
+
+            const plankMin = Math.floor(historyEntry.exercises.plank.current / 60);
+            const plankSec = historyEntry.exercises.plank.current % 60;
+
+            const message = `🎉 <b>День ${completedDay} завершен!</b>
+
+📅 Дата: ${historyEntry.date}
+
+✅ <b>Результаты:</b>
+💪 Отжимания: ${historyEntry.exercises.pushups.current}/${historyEntry.exercises.pushups.target}
+🦵 Приседания: ${historyEntry.exercises.squats.current}/${historyEntry.exercises.squats.target}
+🏋️ Подтягивания: ${historyEntry.exercises.pullups.current}/${historyEntry.exercises.pullups.target}
+🏃 Лестница: ${historyEntry.exercises.stairs.current}/${historyEntry.exercises.stairs.target} пролетов
+⏱️ Планка: ${plankMin}:${plankSec.toString().padStart(2, '0')}
+
+🔥 Серия дней: ${data.streak}
+
+💪 Продолжай в том же духе!`;
+
+            await sendTelegramMessage(message);
         }
 
         // Инициализация при загрузке страницы
