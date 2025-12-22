@@ -1042,6 +1042,9 @@
         let plankInterval = null;
         let plankStartTime = 0;
 
+        // Дата последнего показа сториз
+        let lastStoriesShownDate = null;
+
         // Загрузка данных из localStorage
         function loadData() {
             const saved = localStorage.getItem('challengeData');
@@ -1054,6 +1057,11 @@
             if (savedTelegram) {
                 telegramSettings = JSON.parse(savedTelegram);
                 updateTelegramStatus();
+            }
+
+            const savedStoriesDate = localStorage.getItem('lastStoriesShownDate');
+            if (savedStoriesDate) {
+                lastStoriesShownDate = savedStoriesDate;
             }
         }
 
@@ -1548,8 +1556,12 @@
 
         // Проверка, показывали ли уже сториз
         function checkStoriesShown() {
-            // Показываем сториз при каждом открытии
-            showStories();
+            const today = new Date().toDateString();
+
+            // Если сториз не показывались сегодня, показать их
+            if (lastStoriesShownDate !== today) {
+                showStories();
+            }
         }
 
         // Показать сториз
@@ -1624,6 +1636,11 @@
         // Завершить показ сториз
         function finishStories() {
             document.getElementById('storiesOverlay').classList.add('hidden');
+
+            // Сохранить дату показа сториз
+            const today = new Date().toDateString();
+            lastStoriesShownDate = today;
+            localStorage.setItem('lastStoriesShownDate', today);
 
             // Сбросить на начало для следующего показа
             currentStoryIndex = 0;
