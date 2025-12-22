@@ -50,6 +50,33 @@
             align-items: center;
             padding: 40px 20px;
             margin-bottom: 40px;
+            position: relative;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: pointer;
+            animation: bounce-arrow 2s ease-in-out infinite;
+        }
+
+        .scroll-arrow {
+            width: 24px;
+            height: 24px;
+            border-right: 3px solid rgba(255, 255, 255, 0.6);
+            border-bottom: 3px solid rgba(255, 255, 255, 0.6);
+            transform: rotate(45deg);
+        }
+
+        @keyframes bounce-arrow {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                transform: translateX(-50%) translateY(10px);
+            }
         }
 
         .day-counter {
@@ -833,6 +860,9 @@
             <h1 style="font-size: 2em; margin-bottom: 20px;">💪 300 Day Challenge</h1>
             <div class="day-counter" id="dayCounter">День 1</div>
             <div class="subtitle">Путь к легенде начинается здесь</div>
+            <div class="scroll-indicator" onclick="window.scrollTo({top: window.innerHeight, behavior: 'smooth'})">
+                <div class="scroll-arrow"></div>
+            </div>
         </div>
 
         <div>
