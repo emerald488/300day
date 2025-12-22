@@ -21,6 +21,21 @@
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
     <link rel="apple-touch-icon" href="icon-192.png">
+
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=105968296', 'ym');
+
+        ym(105968296, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/105968296" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
     <style>
         * {
             margin: 0;
@@ -48,7 +63,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 40px 20px;
+            padding: 20px 20px 40px 20px;
             margin-bottom: 40px;
             position: relative;
         }
@@ -90,6 +105,48 @@
             font-size: 1.2em;
             opacity: 0.9;
             margin-top: 20px;
+        }
+
+        .days-progress-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 30px auto 0;
+        }
+
+        .days-progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+
+        .days-progress-bar-wrapper {
+            background: #353535;
+            border: 1px solid #4a4a4a;
+            border-radius: 12px;
+            height: 24px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .days-progress-bar {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            min-width: 30px;
+        }
+
+        .days-progress-percentage {
+            color: white;
+            font-size: 0.85em;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
 
         .exercise-item {
@@ -860,6 +917,19 @@
             <h1 style="font-size: 2em; margin-bottom: 20px;">💪 300 Day Challenge</h1>
             <div class="day-counter" id="dayCounter">День 1</div>
             <div class="subtitle">Путь к легенде начинается здесь</div>
+
+            <div class="days-progress-container">
+                <div class="days-progress-header">
+                    <span>Прогресс челленджа</span>
+                    <span id="daysProgressText">1 / 300 дней</span>
+                </div>
+                <div class="days-progress-bar-wrapper">
+                    <div class="days-progress-bar" id="daysProgressBar">
+                        <span class="days-progress-percentage" id="daysProgressPercentage">0.3%</span>
+                    </div>
+                </div>
+            </div>
+
             <div class="scroll-indicator" onclick="window.scrollTo({top: window.innerHeight, behavior: 'smooth'})">
                 <div class="scroll-arrow"></div>
             </div>
@@ -1178,24 +1248,30 @@
         // Обновление UI
         function updateUI() {
             document.getElementById('dayCounter').textContent = `День ${data.currentDay}`;
-            
+
+            // Обновляем прогресс-бар дней
+            const daysPercentage = ((data.currentDay - 1) / 300 * 100).toFixed(1);
+            document.getElementById('daysProgressBar').style.width = `${daysPercentage}%`;
+            document.getElementById('daysProgressPercentage').textContent = `${daysPercentage}%`;
+            document.getElementById('daysProgressText').textContent = `${data.currentDay} / 300 дней`;
+
             for (let exercise in data.exercises) {
                 const ex = data.exercises[exercise];
                 const percentage = Math.min((ex.current / ex.target) * 100, 100);
-                
+
                 if (exercise === 'plank') {
                     const currentMin = Math.floor(ex.current / 60);
                     const currentSec = ex.current % 60;
                     const targetMin = Math.floor(ex.target / 60);
                     const targetSec = ex.target % 60;
-                    document.getElementById(`${exercise}-progress`).textContent = 
+                    document.getElementById(`${exercise}-progress`).textContent =
                         `${currentMin}:${currentSec.toString().padStart(2, '0')}/${targetMin}:${targetSec.toString().padStart(2, '0')}`;
                 } else {
                     document.getElementById(`${exercise}-progress`).textContent = `${ex.current}/${ex.target}`;
                 }
-                
+
                 document.getElementById(`${exercise}-bar`).style.width = `${percentage}%`;
-                
+
                 // Добавляем класс completed если цель достигнута
                 const item = document.getElementById(`${exercise}-item`);
                 if (ex.current >= ex.target) {
