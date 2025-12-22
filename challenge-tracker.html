@@ -660,6 +660,23 @@
             color: white;
         }
 
+        .story-tap-zone {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 50%;
+            z-index: 100;
+            cursor: pointer;
+        }
+
+        .story-tap-left {
+            left: 0;
+        }
+
+        .story-tap-right {
+            right: 0;
+        }
+
         @media (max-width: 600px) {
             .day-counter {
                 font-size: 2.2em;
@@ -701,6 +718,10 @@
     <div id="storiesOverlay" class="stories-overlay hidden">
         <div class="stories-container">
             <button class="story-skip" onclick="skipStories()">Пропустить</button>
+
+            <!-- Tap zones для навигации -->
+            <div class="story-tap-zone story-tap-left" onclick="previousStory()"></div>
+            <div class="story-tap-zone story-tap-right" onclick="nextStory()"></div>
 
             <div class="stories-progress">
                 <div class="story-progress-bar" id="progress-0">
@@ -763,13 +784,11 @@
                             Железная дисциплина, несгибаемая воля и тело, способное на то,
                             о чём ты раньше только мечтал. Начни прямо сейчас!
                         </div>
+                        <button class="story-btn primary" id="startChallengeBtn" onclick="finishStories()" style="margin-top: 30px;">
+                            Начать челлендж
+                        </button>
                     </div>
                 </div>
-            </div>
-
-            <div class="stories-controls">
-                <button class="story-btn" id="prevBtn" onclick="previousStory()" style="display: none;">Назад</button>
-                <button class="story-btn primary" id="nextBtn" onclick="nextStory()">Далее</button>
             </div>
         </div>
     </div>
@@ -1595,6 +1614,7 @@
         function showStories() {
             document.getElementById('storiesOverlay').classList.remove('hidden');
             updateStoryUI();
+            updateStartButton();
         }
 
         // Следующая история
@@ -1637,21 +1657,19 @@
 
         // Обновление UI сториз
         function updateStoryUI() {
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
+            // Функция оставлена для совместимости, но кнопки больше не используются
+            // Навигация теперь осуществляется через tap zones
+        }
 
-            // Показать/скрыть кнопку "Назад"
-            if (currentStoryIndex === 0) {
-                prevBtn.style.display = 'none';
-            } else {
-                prevBtn.style.display = 'block';
-            }
-
-            // Изменить текст кнопки "Далее" на последней истории
-            if (currentStoryIndex === totalStories - 1) {
-                nextBtn.textContent = 'Начать челлендж!';
-            } else {
-                nextBtn.textContent = 'Далее';
+        // Обновление текста кнопки старта на последней стории
+        function updateStartButton() {
+            const startBtn = document.getElementById('startChallengeBtn');
+            if (startBtn) {
+                if (data.currentDay === 1) {
+                    startBtn.textContent = 'Начать челлендж';
+                } else {
+                    startBtn.textContent = `Начать ${data.currentDay} день!`;
+                }
             }
         }
 
