@@ -118,6 +118,23 @@
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        .exercise-controls-left {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+
+        .exercise-controls > .btn-danger {
+            margin-left: auto;
+        }
+
+        #plank-start,
+        #plank-stop {
+            min-width: 85px;
         }
 
         button {
@@ -781,9 +798,11 @@
                     <div class="progress-bar" id="pushups-bar" style="width: 0%"></div>
                 </div>
                 <div class="exercise-controls">
-                    <button onclick="addReps('pushups', 1)">+1</button>
-                    <button onclick="addReps('pushups', 5)">+5</button>
-                    <button onclick="addReps('pushups', 10)">+10</button>
+                    <div class="exercise-controls-left">
+                        <button onclick="addReps('pushups', 1)">+1</button>
+                        <button onclick="addReps('pushups', 5)">+5</button>
+                        <button onclick="addReps('pushups', 10)">+10</button>
+                    </div>
                     <button onclick="resetExercise('pushups')" class="btn-danger">Сброс</button>
                 </div>
             </div>
@@ -798,9 +817,11 @@
                     <div class="progress-bar" id="squats-bar" style="width: 0%"></div>
                 </div>
                 <div class="exercise-controls">
-                    <button onclick="addReps('squats', 1)">+1</button>
-                    <button onclick="addReps('squats', 5)">+5</button>
-                    <button onclick="addReps('squats', 10)">+10</button>
+                    <div class="exercise-controls-left">
+                        <button onclick="addReps('squats', 1)">+1</button>
+                        <button onclick="addReps('squats', 5)">+5</button>
+                        <button onclick="addReps('squats', 10)">+10</button>
+                    </div>
                     <button onclick="resetExercise('squats')" class="btn-danger">Сброс</button>
                 </div>
             </div>
@@ -815,9 +836,11 @@
                     <div class="progress-bar" id="pullups-bar" style="width: 0%"></div>
                 </div>
                 <div class="exercise-controls">
-                    <button onclick="addReps('pullups', 1)">+1</button>
-                    <button onclick="addReps('pullups', 5)">+5</button>
-                    <button onclick="addReps('pullups', 10)">+10</button>
+                    <div class="exercise-controls-left">
+                        <button onclick="addReps('pullups', 1)">+1</button>
+                        <button onclick="addReps('pullups', 5)">+5</button>
+                        <button onclick="addReps('pullups', 10)">+10</button>
+                    </div>
                     <button onclick="resetExercise('pullups')" class="btn-danger">Сброс</button>
                 </div>
             </div>
@@ -832,10 +855,12 @@
                     <div class="progress-bar" id="stairs-bar" style="width: 0%"></div>
                 </div>
                 <div class="exercise-controls">
-                    <button onclick="addReps('stairs', 1)">+1</button>
-                    <button onclick="addReps('stairs', 5)">+5</button>
-                    <button onclick="addReps('stairs', 10)">+10</button>
-                    <button onclick="addReps('stairs', 16)">+16</button>
+                    <div class="exercise-controls-left">
+                        <button onclick="addReps('stairs', 1)">+1</button>
+                        <button onclick="addReps('stairs', 5)">+5</button>
+                        <button onclick="addReps('stairs', 10)">+10</button>
+                        <button onclick="addReps('stairs', 16)">+16</button>
+                    </div>
                     <button onclick="resetExercise('stairs')" class="btn-danger">Сброс</button>
                 </div>
             </div>
@@ -851,10 +876,12 @@
                 </div>
                 <div class="timer" id="plank-timer">0:00</div>
                 <div class="exercise-controls">
-                    <button onclick="startPlankTimer()" class="btn-success" id="plank-start">Старт</button>
-                    <button onclick="stopPlankTimer()" class="btn-danger hidden" id="plank-stop">Стоп</button>
-                    <button onclick="addPlankSeconds(10)">+10 сек</button>
-                    <button onclick="addPlankSeconds(30)">+30 сек</button>
+                    <div class="exercise-controls-left">
+                        <button onclick="startPlankTimer()" class="btn-success" id="plank-start">Старт</button>
+                        <button onclick="stopPlankTimer()" class="btn-danger hidden" id="plank-stop">Стоп</button>
+                        <button onclick="addPlankSeconds(10)">+10 сек</button>
+                        <button onclick="addPlankSeconds(30)">+30 сек</button>
+                    </div>
                     <button onclick="resetExercise('plank')" class="btn-danger">Сброс</button>
                 </div>
             </div>
