@@ -473,7 +473,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #1a1a1a;
             z-index: 10000;
             display: flex;
             align-items: center;
@@ -593,8 +593,8 @@
 
         .story-btn {
             flex: 1;
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.4);
+            background: #424242;
+            border: 1px solid #5a5a5a;
             color: white;
             padding: 16px 24px;
             border-radius: 12px;
@@ -602,33 +602,33 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            backdrop-filter: blur(10px);
         }
 
         .story-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.6);
+            background: #4a4a4a;
+            border-color: #6a6a6a;
             transform: translateY(-2px);
         }
 
         .story-btn.primary {
-            background: white;
-            color: #667eea;
-            border-color: white;
+            background: #4CAF50;
+            color: white;
+            border: 1px solid #45a049;
         }
 
         .story-btn.primary:hover {
-            background: rgba(255, 255, 255, 0.95);
+            background: #45a049;
+            border-color: #3d8b40;
             transform: translateY(-2px);
         }
 
         .story-skip {
             position: absolute;
-            top: 20px;
+            top: 60px;
             right: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.7);
             padding: 10px 20px;
             border-radius: 20px;
             font-size: 0.9em;
@@ -639,7 +639,8 @@
         }
 
         .story-skip:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
         }
 
         @media (max-width: 600px) {
