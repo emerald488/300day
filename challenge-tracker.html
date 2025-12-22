@@ -1197,10 +1197,15 @@
                 const lastDate = new Date(data.lastCompletedDate);
                 const yesterday = new Date();
                 yesterday.setDate(yesterday.getDate() - 1);
-                
+
                 if (lastDate.toDateString() === yesterday.toDateString()) {
+                    // Вчера завершили - увеличиваем серию
                     data.streak++;
-                } else if (lastDate.toDateString() !== today) {
+                } else if (lastDate.toDateString() === today) {
+                    // Сегодня уже завершали - серия не меняется
+                    // data.streak остается прежним
+                } else {
+                    // Пропустили дни - сбрасываем серию
                     data.streak = 1;
                 }
             } else {
