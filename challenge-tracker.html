@@ -135,11 +135,9 @@
             background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
             height: 100%;
             transition: width 0.5s ease;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 10px;
-            min-width: 30px;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         .days-progress-percentage {
@@ -147,6 +145,11 @@
             font-size: 0.85em;
             font-weight: bold;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
         }
 
         .exercise-item {
@@ -924,9 +927,8 @@
                     <span id="daysProgressText">1 / 300 дней</span>
                 </div>
                 <div class="days-progress-bar-wrapper">
-                    <div class="days-progress-bar" id="daysProgressBar">
-                        <span class="days-progress-percentage" id="daysProgressPercentage">0.3%</span>
-                    </div>
+                    <div class="days-progress-bar" id="daysProgressBar"></div>
+                    <span class="days-progress-percentage" id="daysProgressPercentage">0.3%</span>
                 </div>
             </div>
 
