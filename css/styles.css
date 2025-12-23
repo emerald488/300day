@@ -172,6 +172,11 @@ body {
     transition: width 0.3s ease;
 }
 
+/* Убираем transition для прогресс-бара планки при работе таймера */
+#plank-bar.no-transition {
+    transition: none;
+}
+
 .exercise-controls {
     display: flex;
     gap: 8px;

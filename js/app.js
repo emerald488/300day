@@ -3,7 +3,7 @@
 // Конфигурация приложения
 const CONFIG = {
     TOTAL_DAYS: 300,
-    PLANK_SECONDS_PER_DAY: 3,
+    PLANK_SECONDS_PER_DAY: 3, // 3 секунды прироста в день (итого: день 1 = 3 сек, день 60 = 180 сек = 3 мин)
     HISTORY_MAX_ENTRIES: 30,
     TOTAL_STORIES: 4,
     UPDATE_CHECK_INTERVAL_MS: 60 * 60 * 1000
@@ -169,7 +169,10 @@ function updateUI() {
             document.getElementById(`${exercise}-progress`).textContent = `${ex.current}/${ex.target}`;
         }
 
-        document.getElementById(`${exercise}-bar`).style.width = `${percentage}%`;
+        // Не обновляем прогресс-бар планки если таймер активен (он обновляется отдельно)
+        if (exercise !== 'plank' || !plankInterval) {
+            document.getElementById(`${exercise}-bar`).style.width = `${percentage}%`;
+        }
 
         // Добавляем класс completed если цель достигнута
         const item = document.getElementById(`${exercise}-item`);
@@ -236,6 +239,10 @@ function startPlankTimer() {
     document.getElementById('plank-start').classList.add('hidden');
     document.getElementById('plank-stop').classList.remove('hidden');
 
+    // Убираем CSS transition для плавного обновления
+    const plankBar = document.getElementById('plank-bar');
+    plankBar.classList.add('no-transition');
+
     plankInterval = setInterval(() => {
         const elapsedMs = Date.now() - plankStartTime;
         const elapsedSec = Math.floor(elapsedMs / 1000);
@@ -245,8 +252,10 @@ function startPlankTimer() {
         document.getElementById('plank-timer').textContent = formatTimeWithMs(elapsedMs);
 
         // Обновляем прогресс-бар планки каждые 10мс для плавности
-        const plankPercentage = Math.min((elapsedMs / 1000 / data.exercises.plank.target) * 100, 100);
-        document.getElementById('plank-bar').style.width = `${plankPercentage}%`;
+        // Конвертируем миллисекунды в секунды (с дробной частью) и делим на target
+        const elapsedSecWithMs = elapsedMs / 1000;
+        const plankPercentage = Math.min((elapsedSecWithMs / data.exercises.plank.target) * 100, 100);
+        plankBar.style.width = `${plankPercentage}%`;
 
         // Сохраняем данные каждую секунду, а не каждые 10мс
         if (elapsedMs % 1000 < 10) {
@@ -262,6 +271,9 @@ function stopPlankTimer() {
         plankInterval = null;
         document.getElementById('plank-start').classList.remove('hidden');
         document.getElementById('plank-stop').classList.add('hidden');
+
+        // Возвращаем CSS transition обратно
+        document.getElementById('plank-bar').classList.remove('no-transition');
     }
 }
 
