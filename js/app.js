@@ -622,6 +622,8 @@ async function sendDayCompletedNotification(completedDay, historyEntry) {
 
 let currentStoryIndex = 0;
 const totalStories = CONFIG.TOTAL_STORIES;
+const STORY_DURATION = 5000; // 5 секунд на сториз
+let storyTimer = null;
 
 // Проверка, показывали ли уже сториз
 function checkStoriesShown() {
@@ -636,14 +638,38 @@ function checkStoriesShown() {
 // Показать сториз
 function showStories() {
     document.getElementById('storiesOverlay').classList.remove('hidden');
+    document.body.classList.add('stories-open');
     updateStoryUI();
     updateStartButton();
+    startStoryTimer();
+}
+
+// Запустить таймер для автоматического перелистывания
+function startStoryTimer() {
+    // Очистить предыдущий таймер, если есть
+    if (storyTimer) {
+        clearTimeout(storyTimer);
+    }
+
+    // Запустить таймер на STORY_DURATION миллисекунд
+    storyTimer = setTimeout(() => {
+        nextStory();
+    }, STORY_DURATION);
+}
+
+// Остановить таймер
+function stopStoryTimer() {
+    if (storyTimer) {
+        clearTimeout(storyTimer);
+        storyTimer = null;
+    }
 }
 
 // Следующая история
 function nextStory() {
     if (currentStoryIndex < totalStories - 1) {
         // Отметить текущую как завершенную
+        document.getElementById(`progress-${currentStoryIndex}`).classList.remove('active');
         document.getElementById(`progress-${currentStoryIndex}`).classList.add('completed');
         document.getElementById(`story-${currentStoryIndex}`).classList.remove('active');
 
@@ -654,6 +680,7 @@ function nextStory() {
         document.getElementById(`story-${currentStoryIndex}`).classList.add('active');
 
         updateStoryUI();
+        startStoryTimer(); // Запустить таймер для следующей истории
     } else {
         // Последняя история - закрываем
         finishStories();
@@ -675,6 +702,7 @@ function previousStory() {
         document.getElementById(`story-${currentStoryIndex}`).classList.add('active');
 
         updateStoryUI();
+        startStoryTimer(); // Перезапустить таймер
     }
 }
 
@@ -696,14 +724,12 @@ function updateStartButton() {
     }
 }
 
-// Пропустить сториз
-function skipStories() {
-    finishStories();
-}
-
 // Завершить показ сториз
 function finishStories() {
+    stopStoryTimer(); // Остановить таймер
+
     document.getElementById('storiesOverlay').classList.add('hidden');
+    document.body.classList.remove('stories-open');
 
     // Сохранить дату показа сториз
     const today = new Date().toDateString();

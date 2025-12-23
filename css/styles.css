@@ -553,6 +553,11 @@ button:active {
     background: rgba(255, 255, 255, 0.9);
 }
 
+/* Блокировка прокрутки при открытых сториз */
+body.stories-open {
+    overflow: hidden;
+}
+
 /* Stories */
 .stories-overlay {
     position: fixed;
@@ -602,15 +607,29 @@ button:active {
     height: 100%;
     background: white;
     width: 0%;
-    transition: width 0.3s ease;
+    transition: none;
 }
 
 .story-progress-bar.active .story-progress-fill {
-    width: 100%;
+    animation: fillProgress 5s linear forwards;
 }
 
 .story-progress-bar.completed .story-progress-fill {
     width: 100%;
+    animation: none;
+}
+
+.story-progress-bar.paused .story-progress-fill {
+    animation-play-state: paused;
+}
+
+@keyframes fillProgress {
+    from {
+        width: 0%;
+    }
+    to {
+        width: 100%;
+    }
 }
 
 .stories-content {
@@ -707,27 +726,6 @@ button:active {
     background: #45a049;
     border-color: #3d8b40;
     transform: translateY(-2px);
-}
-
-.story-skip {
-    position: absolute;
-    top: 60px;
-    right: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 0.7);
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-size: 0.9em;
-    font-weight: 600;
-    cursor: pointer;
-    backdrop-filter: blur(10px);
-    transition: all 0.2s;
-}
-
-.story-skip:hover {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
 }
 
 .story-tap-zone {
