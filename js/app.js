@@ -11,11 +11,20 @@ const CONFIG = {
 
 // ==================== HELPER ФУНКЦИИ ====================
 
-// Форматирование секунд в MM:SS
+// Форматирование секунд в MM:SS (без миллисекунд)
 function formatTime(seconds) {
     const min = Math.floor(seconds / 60);
     const sec = seconds % 60;
     return `${min}:${sec.toString().padStart(2, '0')}`;
+}
+
+// Форматирование миллисекунд в MM:SS.MS
+function formatTimeWithMs(milliseconds) {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const ms = Math.floor((milliseconds % 1000) / 10); // Две цифры миллисекунд
+    const min = Math.floor(totalSeconds / 60);
+    const sec = totalSeconds % 60;
+    return `${min}:${sec.toString().padStart(2, '0')}.${ms.toString().padStart(2, '0')}`;
 }
 
 // Расчет процента выполнения
@@ -225,14 +234,19 @@ function startPlankTimer() {
     document.getElementById('plank-stop').classList.remove('hidden');
 
     plankInterval = setInterval(() => {
-        const elapsed = Math.floor((Date.now() - plankStartTime) / 1000);
-        data.exercises.plank.current = elapsed;
+        const elapsedMs = Date.now() - plankStartTime;
+        const elapsedSec = Math.floor(elapsedMs / 1000);
+        data.exercises.plank.current = elapsedSec;
 
-        document.getElementById('plank-timer').textContent = formatTime(elapsed);
+        // Отображаем время с миллисекундами
+        document.getElementById('plank-timer').textContent = formatTimeWithMs(elapsedMs);
 
-        saveData();
-        updateUI();
-    }, 1000);
+        // Сохраняем данные каждую секунду, а не каждые 10мс
+        if (elapsedMs % 1000 < 10) {
+            saveData();
+            updateUI();
+        }
+    }, 10); // Обновляем каждые 10 миллисекунд
 }
 
 function stopPlankTimer() {
@@ -246,7 +260,7 @@ function stopPlankTimer() {
 
 function addPlankSeconds(seconds) {
     data.exercises.plank.current += seconds;
-    document.getElementById('plank-timer').textContent = formatTime(data.exercises.plank.current);
+    document.getElementById('plank-timer').textContent = formatTimeWithMs(data.exercises.plank.current * 1000);
     saveData();
     updateUI();
 }
@@ -317,7 +331,7 @@ function completeDay() {
     for (let exercise in data.exercises) {
         data.exercises[exercise].current = 0;
     }
-    document.getElementById('plank-timer').textContent = '0:00';
+    document.getElementById('plank-timer').textContent = '0:00.00';
 
     // 8. Сохранение и обновление UI
     celebrate('🎉');
@@ -468,7 +482,7 @@ function importData(event) {
 
                 // Обновляем таймер планки
                 const plankCurrent = data.exercises.plank.current;
-                document.getElementById('plank-timer').textContent = formatTime(plankCurrent);
+                document.getElementById('plank-timer').textContent = formatTimeWithMs(plankCurrent * 1000);
             }
         } catch (error) {
             alert('❌ Ошибка при чтении файла: ' + error.message);
