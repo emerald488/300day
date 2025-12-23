@@ -269,7 +269,14 @@ function addPlankSeconds(seconds) {
 
 // Завершение дня
 function completeDay() {
-    // 1. Валидация выполнения всех упражнений
+    // 1. Проверка, не был ли сегодня уже выполнен день
+    const today = new Date().toDateString();
+    if (data.lastCompletedDate === today) {
+        alert('⏰ Ты уже выполнил тренировку сегодня!\n\nНовый день начнётся завтра. Отдохни и восстанавливайся! 💪');
+        return;
+    }
+
+    // 2. Валидация выполнения всех упражнений
     const allCompleted = Object.values(data.exercises).every(
         ex => ex.current >= ex.target
     );
@@ -282,7 +289,7 @@ function completeDay() {
 
     stopPlankTimer();
 
-    // 2. Сохранение истории
+    // 3. Сохранение истории
     const historyEntry = {
         day: data.currentDay,
         date: new Date().toLocaleDateString('ru-RU'),
@@ -293,13 +300,12 @@ function completeDay() {
         data.history = data.history.slice(0, CONFIG.HISTORY_MAX_ENTRIES);
     }
 
-    // 3. Обновление общей статистики
+    // 4. Обновление общей статистики
     for (let exercise in data.exercises) {
         data.totals[exercise] += data.exercises[exercise].current;
     }
 
-    // 4. Обновление серии дней
-    const today = new Date().toDateString();
+    // 5. Обновление серии дней
     if (data.lastCompletedDate) {
         const lastDate = new Date(data.lastCompletedDate);
         const yesterday = new Date();
@@ -317,28 +323,28 @@ function completeDay() {
     }
     data.lastCompletedDate = today;
 
-    // 5. Переход к следующему дню
+    // 6. Переход к следующему дню
     data.currentDay++;
 
-    // 6. Обновление целевых значений
+    // 7. Обновление целевых значений
     data.exercises.pushups.target = data.currentDay;
     data.exercises.squats.target = data.currentDay;
     data.exercises.pullups.target = data.currentDay;
     data.exercises.stairs.target = data.currentDay;
     data.exercises.plank.target = data.currentDay * CONFIG.PLANK_SECONDS_PER_DAY;
 
-    // 7. Сброс текущего прогресса
+    // 8. Сброс текущего прогресса
     for (let exercise in data.exercises) {
         data.exercises[exercise].current = 0;
     }
     document.getElementById('plank-timer').textContent = '0:00.00';
 
-    // 8. Сохранение и обновление UI
+    // 9. Сохранение и обновление UI
     celebrate('🎉');
     saveData();
     updateUI();
 
-    // 9. Уведомление в Telegram
+    // 10. Уведомление в Telegram
     sendDayCompletedNotification(data.currentDay - 1, historyEntry);
 }
 
