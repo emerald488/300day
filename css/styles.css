@@ -23,13 +23,12 @@ body {
 
 .header {
     text-align: center;
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 20px 20px 40px 20px;
-    margin-bottom: 40px;
+    padding: 20px;
+    margin-bottom: 20px;
     position: relative;
 }
 
