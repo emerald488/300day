@@ -152,7 +152,16 @@
             </div>
         </div>
 
-        <div>
+        <!-- Сообщение о выполненной тренировке -->
+        <div id="dayCompletedMessage" class="day-completed-message hidden">
+            <div class="day-completed-icon">⏰</div>
+            <div class="day-completed-text">
+                <h3>Ты уже выполнил тренировку сегодня!</h3>
+                <p>Новый день начнётся завтра. Отдохни и восстанавливайся! 💪</p>
+            </div>
+        </div>
+
+        <div id="exercisesContainer">
             <!-- Отжимания -->
             <div class="exercise-item" id="pushups-item">
                 <div class="exercise-header">
@@ -251,9 +260,10 @@
                 </div>
             </div>
         </div>
+        </div>
 
         <div class="action-buttons">
-            <button onclick="completeDay()" class="btn-primary btn-success"><span style="font-size: 0.9em;">✅</span> День выполнен! Следующий →</button>
+            <button id="completeDayBtn" onclick="completeDay()" class="btn-primary btn-success"><span style="font-size: 0.9em;">✅</span> День выполнен! Следующий →</button>
             <button onclick="toggleStats()" class="btn-primary"><span style="font-size: 0.9em;">📊</span> Статистика</button>
             <button onclick="toggleHistory()" class="btn-primary"><span style="font-size: 0.9em;">📜</span> История</button>
             <button onclick="toggleSettings()" class="btn-primary"><span style="font-size: 0.9em;">⚙️</span> Настройки</button>

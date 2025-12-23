@@ -353,6 +353,35 @@ button:active {
     display: none;
 }
 
+.day-completed-message {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: 2px solid #8a5dc2;
+    border-radius: 16px;
+    padding: 30px 24px;
+    margin-bottom: 30px;
+    text-align: center;
+    animation: slideIn 0.5s ease-out;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+}
+
+.day-completed-icon {
+    font-size: 4em;
+    margin-bottom: 20px;
+    animation: bounce 2s ease infinite;
+}
+
+.day-completed-text h3 {
+    font-size: 1.5em;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.day-completed-text p {
+    font-size: 1.1em;
+    opacity: 0.95;
+    line-height: 1.5;
+}
+
 .settings-overlay {
     position: fixed;
     top: 0;

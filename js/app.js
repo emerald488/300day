@@ -177,6 +177,9 @@ function updateUI() {
     document.getElementById('daysProgressPercentage').textContent = `${daysPercentage}%`;
     document.getElementById('daysProgressText').textContent = `${data.currentDay} / ${CONFIG.TOTAL_DAYS} дней`;
 
+    // Проверяем, выполнена ли сегодняшняя тренировка
+    checkIfDayCompleted();
+
     for (let exercise in data.exercises) {
         const ex = data.exercises[exercise];
         const percentage = Math.min((ex.current / ex.target) * 100, 100);
@@ -200,6 +203,28 @@ function updateUI() {
     }
 
     updateStats();
+}
+
+// Проверка, выполнена ли сегодняшняя тренировка
+function checkIfDayCompleted() {
+    const today = new Date().toDateString();
+    const isDayCompleted = data.lastCompletedDate === today;
+
+    const messageElement = document.getElementById('dayCompletedMessage');
+    const exercisesContainer = document.getElementById('exercisesContainer');
+    const completeDayBtn = document.getElementById('completeDayBtn');
+
+    if (isDayCompleted) {
+        // Показываем сообщение, скрываем упражнения и кнопку
+        messageElement.classList.remove('hidden');
+        exercisesContainer.classList.add('hidden');
+        completeDayBtn.classList.add('hidden');
+    } else {
+        // Скрываем сообщение, показываем упражнения и кнопку
+        messageElement.classList.add('hidden');
+        exercisesContainer.classList.remove('hidden');
+        completeDayBtn.classList.remove('hidden');
+    }
 }
 
 // ==================== ЛОГИКА УПРАЖНЕНИЙ ====================
@@ -272,7 +297,7 @@ function completeDay() {
     // 1. Проверка, не был ли сегодня уже выполнен день
     const today = new Date().toDateString();
     if (data.lastCompletedDate === today) {
-        alert('⏰ Ты уже выполнил тренировку сегодня!\n\nНовый день начнётся завтра. Отдохни и восстанавливайся! 💪');
+        // Не должно случиться, так как кнопка скрыта, но на всякий случай
         return;
     }
 
