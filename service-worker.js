@@ -1,4 +1,4 @@
-const CACHE_NAME = '300-challenge-v3';
+const CACHE_NAME = '300-challenge-v4';
 const urlsToCache = [
   './challenge-tracker.html',
   './manifest.json',
@@ -10,13 +10,13 @@ const urlsToCache = [
 
 // Установка Service Worker и кеширование файлов
 self.addEventListener('install', event => {
-  // Пропускаем ожидание и сразу активируемся
-  self.skipWaiting();
-  
+  // НЕ пропускаем ожидание - даем пользователю решить когда обновиться
+  // self.skipWaiting() будет вызван только когда пользователь нажмет "Обновить"
+
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Кеш открыт');
+        console.log('Кеш открыт, новая версия готова');
         return cache.addAll(urlsToCache);
       })
   );

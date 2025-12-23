@@ -79,6 +79,7 @@ if ('serviceWorker' in navigator) {
             });
 
         // Обработка сообщений от Service Worker
+        // Перезагружаем только после того как пользователь нажал "Обновить"
         let refreshing = false;
         navigator.serviceWorker.addEventListener('controllerchange', () => {
             if (!refreshing) {
@@ -91,13 +92,32 @@ if ('serviceWorker' in navigator) {
 
 // Показ уведомления об обновлении
 function showUpdateNotification() {
-    document.getElementById('updateNotification').classList.remove('hidden');
+    const notification = document.getElementById('updateNotification');
+    notification.classList.remove('hidden');
+    console.log('Показано уведомление об обновлении');
+}
+
+// Закрытие уведомления об обновлении
+function closeUpdateNotification() {
+    const notification = document.getElementById('updateNotification');
+    notification.classList.add('hidden');
+    console.log('Уведомление об обновлении закрыто');
 }
 
 // Применение обновления
 function updateApp() {
     if (newWorker) {
+        console.log('Применяем обновление...');
+        // Показываем что обновление применяется
+        const notification = document.getElementById('updateNotification');
+        notification.innerHTML = '<div style="padding: 12px; text-align: center;"><span style="font-size: 1.2em;">⏳</span> Обновление...</div>';
+
         newWorker.postMessage({ action: 'skipWaiting' });
+        // После этого сработает controllerchange и страница перезагрузится
+    } else {
+        // Если newWorker не определен, просто перезагружаем
+        console.log('newWorker не найден, перезагружаем страницу');
+        window.location.reload();
     }
 }
 

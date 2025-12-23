@@ -45,7 +45,7 @@
     <!-- /Yandex.Metrika counter -->
 
     <!-- Styles -->
-    <link rel="stylesheet" href="css/styles.css?v=3">
+    <link rel="stylesheet" href="css/styles.css?v=4">
 </head>
 <body>
     <!-- Stories Overlay -->
@@ -127,8 +127,14 @@
 
     <!-- Уведомление об обновлении -->
     <div id="updateNotification" class="update-notification hidden">
-        <span style="font-size: 0.9em;">🔄</span> Доступно обновление приложения!
-        <button onclick="updateApp()">Обновить сейчас</button>
+        <div class="update-content">
+            <span style="font-size: 1.2em;">🔄</span>
+            <span>Доступна новая версия приложения!</span>
+        </div>
+        <div class="update-buttons">
+            <button onclick="updateApp()" class="update-btn-primary">Обновить</button>
+            <button onclick="closeUpdateNotification()" class="update-btn-secondary">Позже</button>
+        </div>
     </div>
     
     <div class="container">
@@ -356,6 +362,6 @@
     </div>
 
     <!-- Main Application Script -->
-    <script src="js/app.js?v=3"></script>
+    <script src="js/app.js?v=4"></script>
 </body>
 </html>
