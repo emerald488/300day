@@ -244,6 +244,10 @@ function startPlankTimer() {
         // Отображаем время с миллисекундами
         document.getElementById('plank-timer').textContent = formatTimeWithMs(elapsedMs);
 
+        // Обновляем прогресс-бар планки каждые 10мс для плавности
+        const plankPercentage = Math.min((elapsedMs / 1000 / data.exercises.plank.target) * 100, 100);
+        document.getElementById('plank-bar').style.width = `${plankPercentage}%`;
+
         // Сохраняем данные каждую секунду, а не каждые 10мс
         if (elapsedMs % 1000 < 10) {
             saveData();
