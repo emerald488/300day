@@ -45,7 +45,7 @@
     <!-- /Yandex.Metrika counter -->
 
     <!-- Styles -->
-    <link rel="stylesheet" href="css/styles.css?v=6">
+    <link rel="stylesheet" href="css/styles.css?v=10">
 </head>
 <body>
     <!-- Stories Overlay -->
@@ -126,26 +126,28 @@
     </div>
 
     <div class="container">
-        <div class="header">
-            <h1 style="font-size: 2.5em; margin-bottom: 8px; margin-top: 20px; font-weight: 700; letter-spacing: -0.02em;">300 Day Challenge</h1>
-            <div class="subtitle" style="margin-bottom: 15px; font-size: 1.1em; opacity: 0.85;">Путь к легенде начинается здесь</div>
+        <!-- Главная страница -->
+        <div id="homePage" class="page active">
+            <div class="header">
+                <h1 style="font-size: 2.5em; margin-bottom: 8px; margin-top: 20px; font-weight: 700; letter-spacing: -0.02em;">300 Day Challenge</h1>
+                <div class="subtitle" style="margin-bottom: 15px; font-size: 1.1em; opacity: 0.85;">Путь к легенде начинается здесь</div>
 
-            <div class="day-counter" id="dayCounter" style="font-size: 3.5em; font-weight: 700; margin-bottom: 15px;">День 1</div>
+                <div class="day-counter" id="dayCounter" style="font-size: 3.5em; font-weight: 700; margin-bottom: 15px;">День 1</div>
 
-            <div class="days-progress-container" style="margin-top: 10px; margin-bottom: 20px;">
-                <div class="days-progress-header">
-                    <span>Прогресс челленджа</span>
-                    <span id="daysProgressText">1 / 300 дней</span>
-                </div>
-                <div class="days-progress-bar-wrapper">
-                    <div class="days-progress-bar" id="daysProgressBar"></div>
-                    <span class="days-progress-percentage" id="daysProgressPercentage">0.3%</span>
+                <div class="days-progress-container" style="margin-top: 10px; margin-bottom: 20px;">
+                    <div class="days-progress-header">
+                        <span>Прогресс челленджа</span>
+                        <span id="daysProgressText">1 / 300 дней</span>
+                    </div>
+                    <div class="days-progress-bar-wrapper">
+                        <div class="days-progress-bar" id="daysProgressBar"></div>
+                        <span class="days-progress-percentage" id="daysProgressPercentage">0.3%</span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Сообщение о выполненной тренировке -->
-        <div id="dayCompletedMessage" class="day-completed-message hidden">
+            <!-- Сообщение о выполненной тренировке -->
+            <div id="dayCompletedMessage" class="day-completed-message hidden">
             <div class="day-completed-icon">⏰</div>
             <div class="day-completed-text">
                 <h3>Ты уже выполнил тренировку сегодня!</h3>
@@ -252,64 +254,68 @@
                 </div>
             </div>
         </div>
-        </div>
 
-        <div class="action-buttons">
-            <button id="completeDayBtn" onclick="completeDay()" class="btn-primary btn-success"><span style="font-size: 0.9em;"></span> День выполнен! </button>
-            <button onclick="toggleStats()" class="btn-primary"><span style="font-size: 0.9em;">📊</span> Статистика</button>
-            <button onclick="toggleHistory()" class="btn-primary"><span style="font-size: 0.9em;">📜</span> История</button>
-            <button onclick="toggleSettings()" class="btn-primary"><span style="font-size: 0.9em;">⚙️</span> Настройки</button>
-        </div>
-        
-        <!-- Скрытый input для импорта файла -->
-        <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
-
-        <div class="stats hidden" id="stats">
-            <h2><span style="font-size: 0.9em;">📊</span> Общая статистика</h2>
-            <div class="stat-item">
-                <span>Всего отжиманий:</span>
-                <span id="total-pushups">0</span>
-            </div>
-            <div class="stat-item">
-                <span>Всего приседаний:</span>
-                <span id="total-squats">0</span>
-            </div>
-            <div class="stat-item">
-                <span>Всего подтягиваний:</span>
-                <span id="total-pullups">0</span>
-            </div>
-            <div class="stat-item">
-                <span>Всего пролетов:</span>
-                <span id="total-stairs">0</span>
-            </div>
-            <div class="stat-item">
-                <span>Всего планки:</span>
-                <span id="total-plank">0 мин</span>
-            </div>
-            <div class="stat-item">
-                <span>Дней подряд:</span>
-                <span id="streak">0</span>
+            <div class="action-buttons">
+                <button id="completeDayBtn" onclick="completeDay()" class="btn-primary btn-success"><span style="font-size: 0.9em;"></span> День выполнен! </button>
             </div>
         </div>
 
-        <div class="history hidden" id="history">
-            <h2><span style="font-size: 0.9em;">📜</span> История тренировок</h2>
+        <!-- Страница Статистики -->
+        <div id="statsPage" class="page">
+            <div class="page-header">
+                <h2><span style="font-size: 0.9em;">📊</span> Статистика</h2>
+            </div>
+            <div class="stats-content">
+                <div class="stat-item">
+                    <span>Всего отжиманий:</span>
+                    <span id="total-pushups">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Всего приседаний:</span>
+                    <span id="total-squats">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Всего подтягиваний:</span>
+                    <span id="total-pullups">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Всего пролетов:</span>
+                    <span id="total-stairs">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Всего планки:</span>
+                    <span id="total-plank">0 мин</span>
+                </div>
+                <div class="stat-item">
+                    <span>Дней подряд:</span>
+                    <span id="streak">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница Истории -->
+        <div id="historyPage" class="page">
+            <div class="page-header">
+                <h2><span style="font-size: 0.9em;">📜</span> История тренировок</h2>
+            </div>
             <div id="history-content"></div>
         </div>
-    </div>
 
-    <!-- Панель настроек -->
-    <div id="settingsOverlay" class="settings-overlay hidden" onclick="closeSettingsOnOverlay(event)">
-        <div class="settings-panel" onclick="event.stopPropagation()">
-            <h2><span style="font-size: 0.9em;">⚙️</span> Настройки</h2>
+        <!-- Страница Настроек -->
+        <div id="settingsPage" class="page">
+            <div class="page-header">
+                <h2><span style="font-size: 0.9em;">⚙️</span> Настройки</h2>
+            </div>
             <div class="settings-buttons">
                 <button onclick="openTelegramSetup()" class="btn-primary"><span style="font-size: 0.9em;">📱</span> Подключить Telegram</button>
                 <button onclick="exportData()" class="btn-primary"><span style="font-size: 0.9em;">💾</span> Экспорт данных</button>
                 <button onclick="document.getElementById('importFile').click()" class="btn-primary"><span style="font-size: 0.9em;">📥</span> Импорт данных</button>
                 <button onclick="resetAll()" class="btn-danger"><span style="font-size: 0.9em;">🔄</span> Сброс всего</button>
-                <button onclick="toggleSettings()" class="btn-primary" style="margin-top: 12px;">Закрыть</button>
             </div>
         </div>
+
+        <!-- Скрытый input для импорта файла -->
+        <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
     </div>
 
     <!-- Панель настройки Telegram -->
@@ -349,7 +355,27 @@
         </div>
     </div>
 
+    <!-- Нижнее меню навигации -->
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="navigateTo('home')">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Главная</span>
+        </button>
+        <button class="nav-item" onclick="navigateTo('stats')">
+            <span class="nav-icon">📊</span>
+            <span class="nav-label">Статистика</span>
+        </button>
+        <button class="nav-item" onclick="navigateTo('history')">
+            <span class="nav-icon">📜</span>
+            <span class="nav-label">История</span>
+        </button>
+        <button class="nav-item" onclick="navigateTo('settings')">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-label">Настройки</span>
+        </button>
+    </div>
+
     <!-- Main Application Script -->
-    <script src="js/app.js?v=6"></script>
+    <script src="js/app.js?v=10"></script>
 </body>
 </html>

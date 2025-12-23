@@ -11,6 +11,38 @@ const CONFIG = {
 
 // ==================== HELPER ФУНКЦИИ ====================
 
+// Навигация между страницами
+function navigateTo(page) {
+    // Скрываем все страницы
+    document.querySelectorAll('.page').forEach(p => {
+        p.classList.remove('active');
+    });
+
+    // Убираем активный класс со всех кнопок меню
+    document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    // Показываем нужную страницу
+    const pageId = page + 'Page';
+    const pageElement = document.getElementById(pageId);
+    if (pageElement) {
+        pageElement.classList.add('active');
+    }
+
+    // Активируем соответствующую кнопку меню
+    const navButtons = document.querySelectorAll('.nav-item');
+    const buttonIndex = { 'home': 0, 'stats': 1, 'history': 2, 'settings': 3 };
+    if (buttonIndex[page] !== undefined) {
+        navButtons[buttonIndex[page]].classList.add('active');
+    }
+
+    // Обновляем контент для истории, если переходим на эту страницу
+    if (page === 'history') {
+        renderHistory();
+    }
+}
+
 // Форматирование секунд в MM:SS (без миллисекунд)
 function formatTime(seconds) {
     const min = Math.floor(seconds / 60);
@@ -410,16 +442,14 @@ function toggleHistory() {
 
 // ==================== НАСТРОЙКИ ====================
 
-// Переключение панели настроек
+// Переключение панели настроек (теперь просто переход на страницу)
 function toggleSettings() {
-    togglePanel('settingsOverlay');
+    navigateTo('settings');
 }
 
-// Закрытие настроек при клике на затемненную область
+// Закрытие настроек при клике на затемненную область (устаревшая функция, оставлена для совместимости)
 function closeSettingsOnOverlay(event) {
-    if (event.target === event.currentTarget) {
-        toggleSettings();
-    }
+    // Функция больше не используется, так как настройки теперь отдельная страница
 }
 
 // Отрисовка истории
@@ -475,7 +505,6 @@ function exportData() {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 
-    toggleSettings();
     alert('✅ Данные экспортированы! Файл сохранен в Downloads.');
 }
 
@@ -499,7 +528,6 @@ function importData(event) {
                 data = importedData;
                 saveData();
                 updateUI();
-                toggleSettings();
                 alert('✅ Данные успешно импортированы!');
 
                 // Останавливаем таймер планки если он был запущен
@@ -524,7 +552,6 @@ function importData(event) {
 
 // Открытие панели настройки Telegram
 function openTelegramSetup() {
-    toggleSettings(); // Закрываем настройки
     toggleTelegramSetup(); // Открываем Telegram настройки
 
     // Заполняем поля если данные уже есть
