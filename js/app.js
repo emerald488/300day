@@ -46,9 +46,20 @@ function togglePanel(elementId, hideOtherIds = []) {
 // ==================== PWA / SERVICE WORKER ====================
 
 // Регистрация Service Worker для PWA
-let newWorker;
+let newWorker = null;
+let updateNotificationShown = false;
 
 if ('serviceWorker' in navigator) {
+    // Обработка сообщений от Service Worker - ВЫНЕСЕНО НАРУЖУ
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) {
+            refreshing = true;
+            console.log('Controller изменился, перезагружаем страницу...');
+            window.location.reload();
+        }
+    });
+
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('service-worker.js')
             .then(registration => {
@@ -65,11 +76,17 @@ if ('serviceWorker' in navigator) {
                 // Обработка обновления
                 registration.addEventListener('updatefound', () => {
                     newWorker = registration.installing;
+                    console.log('Найдено обновление Service Worker');
 
                     newWorker.addEventListener('statechange', () => {
+                        console.log('Service Worker state:', newWorker.state);
+
                         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                             // Новая версия доступна!
-                            showUpdateNotification();
+                            if (!updateNotificationShown) {
+                                updateNotificationShown = true;
+                                showUpdateNotification();
+                            }
                         }
                     });
                 });
@@ -77,16 +94,6 @@ if ('serviceWorker' in navigator) {
             .catch(error => {
                 console.log('Ошибка регистрации Service Worker:', error);
             });
-
-        // Обработка сообщений от Service Worker
-        // Перезагружаем только после того как пользователь нажал "Обновить"
-        let refreshing = false;
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-            if (!refreshing) {
-                refreshing = true;
-                window.location.reload();
-            }
-        });
     });
 }
 
@@ -106,18 +113,36 @@ function closeUpdateNotification() {
 
 // Применение обновления
 function updateApp() {
+    console.log('updateApp вызван, newWorker:', newWorker);
+
     if (newWorker) {
-        console.log('Применяем обновление...');
+        console.log('Применяем обновление через skipWaiting...');
+
         // Показываем что обновление применяется
         const notification = document.getElementById('updateNotification');
         notification.innerHTML = '<div style="padding: 12px; text-align: center;"><span style="font-size: 1.2em;">⏳</span> Обновление...</div>';
 
+        // Отправляем сообщение Service Worker
         newWorker.postMessage({ action: 'skipWaiting' });
-        // После этого сработает controllerchange и страница перезагрузится
+
+        // Таймаут на случай если controllerchange не сработает
+        setTimeout(() => {
+            console.log('Принудительная перезагрузка через таймаут');
+            window.location.reload();
+        }, 2000);
     } else {
-        // Если newWorker не определен, просто перезагружаем
-        console.log('newWorker не найден, перезагружаем страницу');
-        window.location.reload();
+        // Если newWorker не определен, очищаем кеш и перезагружаем
+        console.log('newWorker не найден, очищаем кеш и перезагружаем страницу');
+
+        if ('caches' in window) {
+            caches.keys().then(keys => {
+                keys.forEach(key => caches.delete(key));
+            }).then(() => {
+                window.location.reload();
+            });
+        } else {
+            window.location.reload();
+        }
     }
 }
 
