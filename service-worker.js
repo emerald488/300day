@@ -1,7 +1,11 @@
-const CACHE_NAME = '300-challenge-v2';
+const CACHE_NAME = '300-challenge-v3';
 const urlsToCache = [
   './challenge-tracker.html',
-  './manifest.json'
+  './manifest.json',
+  './css/styles.css',
+  './js/app.js',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 // Установка Service Worker и кеширование файлов
@@ -39,12 +43,14 @@ self.addEventListener('activate', event => {
 
 // Перехват запросов и работа с кешем
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Запрашиваем свежую версию с сервера
-        const fetchPromise = fetch(event.request).then(networkResponse => {
-          // Если получили ответ, обновляем кеш
+  const url = new URL(event.request.url);
+
+  // Для HTML, CSS, JS используем Network First (всегда пытаемся получить свежую версию)
+  if (url.pathname.endsWith('.html') || url.pathname.endsWith('.css') || url.pathname.endsWith('.js')) {
+    event.respondWith(
+      fetch(event.request)
+        .then(networkResponse => {
+          // Обновляем кеш свежей версией
           if (networkResponse && networkResponse.status === 200) {
             const responseToCache = networkResponse.clone();
             caches.open(CACHE_NAME).then(cache => {
@@ -52,15 +58,29 @@ self.addEventListener('fetch', event => {
             });
           }
           return networkResponse;
-        }).catch(() => {
+        })
+        .catch(() => {
           // Если сеть недоступна, используем кеш
-          return response;
-        });
-        
-        // Возвращаем из кеша если есть, иначе ждем сетевой запрос
-        return response || fetchPromise;
-      })
-  );
+          return caches.match(event.request);
+        })
+    );
+  } else {
+    // Для остальных файлов (картинки, шрифты) используем Cache First
+    event.respondWith(
+      caches.match(event.request)
+        .then(response => {
+          return response || fetch(event.request).then(networkResponse => {
+            if (networkResponse && networkResponse.status === 200) {
+              const responseToCache = networkResponse.clone();
+              caches.open(CACHE_NAME).then(cache => {
+                cache.put(event.request, responseToCache);
+              });
+            }
+            return networkResponse;
+          });
+        })
+    );
+  }
 });
 
 // Уведомление клиентов о доступном обновлении

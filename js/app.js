@@ -54,6 +54,9 @@ if ('serviceWorker' in navigator) {
             .then(registration => {
                 console.log('Service Worker зарегистрирован:', registration);
 
+                // Принудительная проверка обновлений при загрузке
+                registration.update();
+
                 // Проверка обновлений каждый час
                 setInterval(() => {
                     registration.update();
