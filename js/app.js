@@ -632,13 +632,31 @@ function checkStoriesShown() {
     // Если сториз не показывались сегодня, показать их
     if (lastStoriesShownDate !== today) {
         showStories();
+    } else {
+        // Если сториз уже показывались, сразу показать основной контент
+        document.body.classList.add('app-loaded');
     }
 }
 
 // Показать сториз
 function showStories() {
+    // Убрать класс app-loaded, чтобы скрыть основной контент
+    document.body.classList.remove('app-loaded');
+
     document.getElementById('storiesOverlay').classList.remove('hidden');
     document.body.classList.add('stories-open');
+
+    // Сбросить все состояния перед началом
+    for (let i = 0; i < totalStories; i++) {
+        document.getElementById(`progress-${i}`).classList.remove('active', 'completed');
+        document.getElementById(`story-${i}`).classList.remove('active');
+    }
+
+    // Установить первую историю как активную
+    currentStoryIndex = 0;
+    document.getElementById('progress-0').classList.add('active');
+    document.getElementById('story-0').classList.add('active');
+
     updateStoryUI();
     updateStartButton();
     startStoryTimer();
@@ -731,29 +749,22 @@ function finishStories() {
     document.getElementById('storiesOverlay').classList.add('hidden');
     document.body.classList.remove('stories-open');
 
+    // Показать основной контент
+    document.body.classList.add('app-loaded');
+
     // Сохранить дату показа сториз
     const today = new Date().toDateString();
     lastStoriesShownDate = today;
     localStorage.setItem('lastStoriesShownDate', today);
 
-    // Сбросить на начало для следующего показа
+    // Сбросить индекс (очистка состояния произойдет при следующем открытии)
     currentStoryIndex = 0;
-
-    // Очистить все состояния
-    for (let i = 0; i < totalStories; i++) {
-        document.getElementById(`progress-${i}`).classList.remove('active', 'completed');
-        document.getElementById(`story-${i}`).classList.remove('active');
-    }
-
-    // Установить первую историю как активную для следующего показа
-    document.getElementById('progress-0').classList.add('active');
-    document.getElementById('story-0').classList.add('active');
 }
 
 // ==================== ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ ====================
 
-// Инициализация при загрузке страницы
-window.addEventListener('load', () => {
+// Инициализация при загрузке DOM (до загрузки всех ресурсов)
+document.addEventListener('DOMContentLoaded', () => {
     loadData();
     updateUI();
     checkStoriesShown();

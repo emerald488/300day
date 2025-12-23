@@ -558,6 +558,18 @@ body.stories-open {
     overflow: hidden;
 }
 
+/* Скрыть основной контент пока не загрузилось приложение */
+.container {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+body.app-loaded .container {
+    opacity: 1;
+    pointer-events: auto;
+}
+
 /* Stories */
 .stories-overlay {
     position: fixed;
