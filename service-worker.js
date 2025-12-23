@@ -1,4 +1,4 @@
-const CACHE_NAME = '300-challenge-v5';
+const CACHE_NAME = '300-challenge-v6';
 const urlsToCache = [
   './challenge-tracker.html',
   './manifest.json',
@@ -10,13 +10,13 @@ const urlsToCache = [
 
 // Установка Service Worker и кеширование файлов
 self.addEventListener('install', event => {
-  // НЕ пропускаем ожидание - даем пользователю решить когда обновиться
-  // self.skipWaiting() будет вызван только когда пользователь нажмет "Обновить"
+  // Сразу активируем новую версию
+  self.skipWaiting();
 
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Кеш открыт, новая версия готова');
+        console.log('Кеш открыт, новая версия установлена');
         return cache.addAll(urlsToCache);
       })
   );
@@ -80,12 +80,5 @@ self.addEventListener('fetch', event => {
           });
         })
     );
-  }
-});
-
-// Уведомление клиентов о доступном обновлении
-self.addEventListener('message', event => {
-  if (event.data.action === 'skipWaiting') {
-    self.skipWaiting();
   }
 });

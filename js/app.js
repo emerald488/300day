@@ -45,17 +45,14 @@ function togglePanel(elementId, hideOtherIds = []) {
 
 // ==================== PWA / SERVICE WORKER ====================
 
-// Регистрация Service Worker для PWA
-let newWorker = null;
-let updateNotificationShown = false;
-
+// Регистрация Service Worker для PWA - АВТОМАТИЧЕСКОЕ ОБНОВЛЕНИЕ
 if ('serviceWorker' in navigator) {
-    // Обработка сообщений от Service Worker - ВЫНЕСЕНО НАРУЖУ
+    // Автоматическая перезагрузка при обновлении Service Worker
     let refreshing = false;
     navigator.serviceWorker.addEventListener('controllerchange', () => {
         if (!refreshing) {
             refreshing = true;
-            console.log('Controller изменился, перезагружаем страницу...');
+            console.log('Service Worker обновлен, перезагружаем страницу...');
             window.location.reload();
         }
     });
@@ -63,7 +60,7 @@ if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('service-worker.js')
             .then(registration => {
-                console.log('Service Worker зарегистрирован:', registration);
+                console.log('Service Worker зарегистрирован');
 
                 // Принудительная проверка обновлений при загрузке
                 registration.update();
@@ -72,78 +69,11 @@ if ('serviceWorker' in navigator) {
                 setInterval(() => {
                     registration.update();
                 }, CONFIG.UPDATE_CHECK_INTERVAL_MS);
-
-                // Обработка обновления
-                registration.addEventListener('updatefound', () => {
-                    newWorker = registration.installing;
-                    console.log('Найдено обновление Service Worker');
-
-                    newWorker.addEventListener('statechange', () => {
-                        console.log('Service Worker state:', newWorker.state);
-
-                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            // Новая версия доступна!
-                            if (!updateNotificationShown) {
-                                updateNotificationShown = true;
-                                showUpdateNotification();
-                            }
-                        }
-                    });
-                });
             })
             .catch(error => {
                 console.log('Ошибка регистрации Service Worker:', error);
             });
     });
-}
-
-// Показ уведомления об обновлении
-function showUpdateNotification() {
-    const notification = document.getElementById('updateNotification');
-    notification.classList.remove('hidden');
-    console.log('Показано уведомление об обновлении');
-}
-
-// Закрытие уведомления об обновлении
-function closeUpdateNotification() {
-    const notification = document.getElementById('updateNotification');
-    notification.classList.add('hidden');
-    console.log('Уведомление об обновлении закрыто');
-}
-
-// Применение обновления
-function updateApp() {
-    console.log('updateApp вызван, newWorker:', newWorker);
-
-    if (newWorker) {
-        console.log('Применяем обновление через skipWaiting...');
-
-        // Показываем что обновление применяется
-        const notification = document.getElementById('updateNotification');
-        notification.innerHTML = '<div style="padding: 12px; text-align: center;"><span style="font-size: 1.2em;">⏳</span> Обновление...</div>';
-
-        // Отправляем сообщение Service Worker
-        newWorker.postMessage({ action: 'skipWaiting' });
-
-        // Таймаут на случай если controllerchange не сработает
-        setTimeout(() => {
-            console.log('Принудительная перезагрузка через таймаут');
-            window.location.reload();
-        }, 2000);
-    } else {
-        // Если newWorker не определен, очищаем кеш и перезагружаем
-        console.log('newWorker не найден, очищаем кеш и перезагружаем страницу');
-
-        if ('caches' in window) {
-            caches.keys().then(keys => {
-                keys.forEach(key => caches.delete(key));
-            }).then(() => {
-                window.location.reload();
-            });
-        } else {
-            window.location.reload();
-        }
-    }
 }
 
 // ==================== ИНИЦИАЛИЗАЦИЯ ДАННЫХ ====================
