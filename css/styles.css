@@ -720,6 +720,8 @@ body.app-loaded .container {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
+    position: relative;
+    z-index: 200;
 }
 
 .story-btn:hover {

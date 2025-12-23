@@ -698,9 +698,14 @@ function nextStory() {
         document.getElementById(`story-${currentStoryIndex}`).classList.add('active');
 
         updateStoryUI();
-        startStoryTimer(); // Запустить таймер для следующей истории
+
+        // На последней истории НЕ запускаем автоматический таймер
+        // чтобы дать пользователю время нажать кнопку
+        if (currentStoryIndex < totalStories - 1) {
+            startStoryTimer();
+        }
     } else {
-        // Последняя история - закрываем
+        // На последней истории - закрываем сториз
         finishStories();
     }
 }
