@@ -18,6 +18,9 @@ function navigateTo(page) {
 
     if (!targetPage) return;
 
+    // Проверяем, уже ли мы на этой странице
+    const isAlreadyActive = targetPage.classList.contains('active');
+
     // Скрываем все страницы, КРОМЕ целевой (чтобы избежать мигания)
     document.querySelectorAll('.page').forEach(p => {
         if (p !== targetPage) {
@@ -26,7 +29,7 @@ function navigateTo(page) {
     });
 
     // Показываем нужную страницу (если она ещё не активна)
-    if (!targetPage.classList.contains('active')) {
+    if (!isAlreadyActive) {
         targetPage.classList.add('active');
     }
 
@@ -42,9 +45,14 @@ function navigateTo(page) {
         }
     });
 
-    // Обновляем контент для истории, если переходим на эту страницу
-    if (page === 'history') {
-        renderHistory();
+    // Обновляем контент только если реально перешли на новую страницу
+    if (!isAlreadyActive) {
+        if (page === 'home') {
+            // Обновляем UI только при реальном переходе на главную
+            checkIfDayCompleted();
+        } else if (page === 'history') {
+            renderHistory();
+        }
     }
 }
 
@@ -312,13 +320,17 @@ function checkIfDayCompleted() {
     const completeDayBtn = document.getElementById('completeDayBtn');
     const homePage = document.getElementById('homePage');
 
-    if (isDayCompleted) {
+    // Проверяем текущее состояние, чтобы избежать ненужных перерисовок
+    const isCurrentlyShowingCompleted = messageElement.classList.contains('hidden') === false;
+
+    // Обновляем только если состояние изменилось
+    if (isDayCompleted && !isCurrentlyShowingCompleted) {
         // Показываем сообщение, скрываем упражнения и кнопку
         messageElement.classList.remove('hidden');
         exercisesContainer.classList.add('hidden');
         completeDayBtn.classList.add('hidden');
         homePage.classList.add('day-completed');
-    } else {
+    } else if (!isDayCompleted && isCurrentlyShowingCompleted) {
         // Скрываем сообщение, показываем упражнения и кнопку
         messageElement.classList.add('hidden');
         exercisesContainer.classList.remove('hidden');
