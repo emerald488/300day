@@ -318,6 +318,26 @@
         <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
     </div>
 
+    <!-- Нижнее меню навигации -->
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="navigateTo('home')">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Главная</span>
+        </button>
+        <button class="nav-item" onclick="navigateTo('stats')">
+            <span class="nav-icon">📊</span>
+            <span class="nav-label">Статистика</span>
+        </button>
+        <button class="nav-item" onclick="navigateTo('history')">
+            <span class="nav-icon">📜</span>
+            <span class="nav-label">История</span>
+        </button>
+        <button class="nav-item" onclick="navigateTo('settings')">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-label">Настройки</span>
+        </button>
+    </div>
+
     <!-- Панель настройки Telegram -->
     <div id="telegramSetupOverlay" class="settings-overlay hidden" onclick="closeTelegramSetupOnOverlay(event)">
         <div class="telegram-setup" onclick="event.stopPropagation()">
@@ -353,26 +373,6 @@
                 <button onclick="toggleTelegramSetup()" class="btn-primary">Закрыть</button>
             </div>
         </div>
-    </div>
-
-    <!-- Нижнее меню навигации -->
-    <div class="bottom-nav">
-        <button class="nav-item active" onclick="navigateTo('home')">
-            <span class="nav-icon">🏠</span>
-            <span class="nav-label">Главная</span>
-        </button>
-        <button class="nav-item" onclick="navigateTo('stats')">
-            <span class="nav-icon">📊</span>
-            <span class="nav-label">Статистика</span>
-        </button>
-        <button class="nav-item" onclick="navigateTo('history')">
-            <span class="nav-icon">📜</span>
-            <span class="nav-label">История</span>
-        </button>
-        <button class="nav-item" onclick="navigateTo('settings')">
-            <span class="nav-icon">⚙️</span>
-            <span class="nav-label">Настройки</span>
-        </button>
     </div>
 
     <!-- Main Application Script -->

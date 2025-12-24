@@ -553,6 +553,11 @@ body.stories-open {
     overflow: hidden;
 }
 
+/* Скрыть нижнее меню при открытых сториз */
+body.stories-open .bottom-nav {
+    display: none;
+}
+
 /* Скрыть основной контент пока не загрузилось приложение */
 .container {
     opacity: 0;
