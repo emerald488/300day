@@ -4,6 +4,20 @@
     box-sizing: border-box;
 }
 
+/* Убрать синюю подсветку при тапе на Android/iOS */
+button,
+a,
+[onclick],
+.story-tap-zone,
+.clickable,
+input[type="button"],
+input[type="submit"] {
+    -webkit-tap-highlight-color: transparent;
+    tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     background: #1a1a1a;
