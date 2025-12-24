@@ -155,6 +155,7 @@ function loadData() {
     const saved = localStorage.getItem('challengeData');
     if (saved) {
         data = JSON.parse(saved);
+        checkForNewDay(); // Проверяем, не наступил ли новый день
         updateUI();
     }
 
@@ -170,6 +171,38 @@ function loadData() {
     }
 }
 
+// Проверка наступления нового дня
+function checkForNewDay() {
+    const today = new Date().toDateString();
+
+    // Если день был завершен, но сейчас уже новая дата - переходим к новому дню
+    if (data.lastCompletedDate && data.lastCompletedDate !== today) {
+        // Проверяем, была ли дата завершения вчера или раньше
+        const lastCompleted = new Date(data.lastCompletedDate);
+        const now = new Date();
+
+        // Если последнее завершение было в прошлом, переходим к следующему дню
+        if (lastCompleted < now) {
+            // Переход к следующему дню
+            data.currentDay++;
+
+            // Обновление целевых значений
+            data.exercises.pushups.target = data.currentDay;
+            data.exercises.squats.target = data.currentDay;
+            data.exercises.pullups.target = data.currentDay;
+            data.exercises.stairs.target = data.currentDay;
+            data.exercises.plank.target = data.currentDay * CONFIG.PLANK_SECONDS_PER_DAY;
+
+            // Прогресс уже был сброшен при завершении дня, но на всякий случай
+            for (let exercise in data.exercises) {
+                data.exercises[exercise].current = 0;
+            }
+
+            saveData();
+        }
+    }
+}
+
 // Сохранение данных в localStorage
 function saveData() {
     localStorage.setItem('challengeData', JSON.stringify(data));
@@ -179,7 +212,20 @@ function saveData() {
 
 // Обновление UI
 function updateUI() {
-    document.getElementById('dayCounter').textContent = `День ${data.currentDay}`;
+    const today = new Date().toDateString();
+    const isDayCompleted = data.lastCompletedDate === today;
+
+    // Отображаем номер дня с меткой "ЗАВЕРШЕН" если день выполнен
+    if (isDayCompleted) {
+        document.getElementById('dayCounter').innerHTML = `День ${data.currentDay} <span style="color: #4CAF50; font-size: 0.4em; display: block; margin-top: 10px;">✅ ЗАВЕРШЕН</span>`;
+    } else {
+        document.getElementById('dayCounter').textContent = `День ${data.currentDay}`;
+    }
+
+    // Отображаем текущую дату
+    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = new Date().toLocaleDateString('ru-RU', dateOptions);
+    document.getElementById('currentDate').textContent = formattedDate;
 
     // Обновляем прогресс-бар дней
     const daysPercentage = calculatePercentage(data.currentDay - 1, CONFIG.TOTAL_DAYS);
@@ -377,29 +423,22 @@ function completeDay() {
     }
     data.lastCompletedDate = today;
 
-    // 6. Переход к следующему дню
-    data.currentDay++;
+    // 6. НЕ переходим к следующему дню сразу - он начнется автоматически завтра
+    // Просто отмечаем текущий день как завершенный
 
-    // 7. Обновление целевых значений
-    data.exercises.pushups.target = data.currentDay;
-    data.exercises.squats.target = data.currentDay;
-    data.exercises.pullups.target = data.currentDay;
-    data.exercises.stairs.target = data.currentDay;
-    data.exercises.plank.target = data.currentDay * CONFIG.PLANK_SECONDS_PER_DAY;
-
-    // 8. Сброс текущего прогресса
+    // 7. Сброс текущего прогресса (чтобы пользователь не мог добавлять еще)
     for (let exercise in data.exercises) {
         data.exercises[exercise].current = 0;
     }
     document.getElementById('plank-timer').textContent = '0:00.00';
 
-    // 9. Сохранение и обновление UI
+    // 8. Сохранение и обновление UI
     celebrate('🎉');
     saveData();
     updateUI();
 
-    // 10. Уведомление в Telegram
-    sendDayCompletedNotification(data.currentDay - 1, historyEntry);
+    // 9. Уведомление в Telegram (отправляем текущий день, а не -1)
+    sendDayCompletedNotification(data.currentDay, historyEntry);
 }
 
 // Анимация празднования
