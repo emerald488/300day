@@ -228,10 +228,13 @@ function updateUI() {
     document.getElementById('currentDate').textContent = formattedDate;
 
     // Обновляем прогресс-бар дней
-    const daysPercentage = calculatePercentage(data.currentDay - 1, CONFIG.TOTAL_DAYS);
+    // Если день завершен, показываем текущий день как завершенный
+    // Если не завершен, показываем предыдущие завершенные дни
+    const completedDays = isDayCompleted ? data.currentDay : data.currentDay - 1;
+    const daysPercentage = calculatePercentage(completedDays, CONFIG.TOTAL_DAYS);
     document.getElementById('daysProgressBar').style.width = `${daysPercentage}%`;
     document.getElementById('daysProgressPercentage').textContent = `${daysPercentage}%`;
-    document.getElementById('daysProgressText').textContent = `${data.currentDay} / ${CONFIG.TOTAL_DAYS} дней`;
+    document.getElementById('daysProgressText').textContent = `${completedDays} / ${CONFIG.TOTAL_DAYS} дней`;
 
     // Проверяем, выполнена ли сегодняшняя тренировка
     checkIfDayCompleted();
