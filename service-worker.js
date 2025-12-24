@@ -1,4 +1,4 @@
-const CACHE_NAME = '300-challenge-v8';
+const CACHE_NAME = '300-challenge-v9';
 const urlsToCache = [
   './challenge-tracker.html',
   './manifest.json',
