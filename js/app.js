@@ -426,6 +426,29 @@ function updateStats() {
     document.getElementById('total-plank').textContent = `${formatTime(data.totals.plank)} мин`;
 
     document.getElementById('streak').textContent = data.streak;
+
+    // Расчет среднего значения на основе завершенных дней
+    const completedDays = data.history.length;
+
+    if (completedDays > 0) {
+        const avgPushups = Math.round(data.totals.pushups / completedDays);
+        const avgSquats = Math.round(data.totals.squats / completedDays);
+        const avgPullups = Math.round(data.totals.pullups / completedDays);
+        const avgStairs = Math.round(data.totals.stairs / completedDays);
+        const avgPlank = Math.round(data.totals.plank / completedDays);
+
+        document.getElementById('avg-pushups').textContent = avgPushups;
+        document.getElementById('avg-squats').textContent = avgSquats;
+        document.getElementById('avg-pullups').textContent = avgPullups;
+        document.getElementById('avg-stairs').textContent = avgStairs;
+        document.getElementById('avg-plank').textContent = formatTime(avgPlank);
+    } else {
+        document.getElementById('avg-pushups').textContent = '0';
+        document.getElementById('avg-squats').textContent = '0';
+        document.getElementById('avg-pullups').textContent = '0';
+        document.getElementById('avg-stairs').textContent = '0';
+        document.getElementById('avg-plank').textContent = '0:00';
+    }
 }
 
 // Переключение статистики
