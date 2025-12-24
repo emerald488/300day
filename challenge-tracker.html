@@ -53,19 +53,19 @@
         <div class="stories-container">
             <!-- Tap zones для навигации -->
             <div class="story-tap-zone story-tap-left"
-                 onclick="previousStory()"
-                 ontouchstart="pauseStory()"
-                 ontouchend="resumeStory()"
-                 onmousedown="pauseStory()"
-                 onmouseup="resumeStory()"
-                 onmouseleave="resumeStory()"></div>
+                 ontouchstart="pauseStory(event)"
+                 ontouchend="resumeStory(event); previousStory()"
+                 ontouchcancel="resumeStory(event)"
+                 onmousedown="pauseStory(event)"
+                 onmouseup="resumeStory(event); previousStory()"
+                 onmouseleave="resumeStory(event)"></div>
             <div class="story-tap-zone story-tap-right"
-                 onclick="nextStory()"
-                 ontouchstart="pauseStory()"
-                 ontouchend="resumeStory()"
-                 onmousedown="pauseStory()"
-                 onmouseup="resumeStory()"
-                 onmouseleave="resumeStory()"></div>
+                 ontouchstart="pauseStory(event)"
+                 ontouchend="resumeStory(event); nextStory()"
+                 ontouchcancel="resumeStory(event)"
+                 onmousedown="pauseStory(event)"
+                 onmouseup="resumeStory(event); nextStory()"
+                 onmouseleave="resumeStory(event)"></div>
 
             <div class="stories-progress">
                 <div class="story-progress-bar" id="progress-0">

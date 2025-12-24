@@ -719,6 +719,8 @@ let storyTimer = null;
 let storyPaused = false;
 let storyStartTime = 0;
 let storyRemainingTime = STORY_DURATION;
+let touchStartTime = 0;
+const LONG_PRESS_THRESHOLD = 200; // миллисекунды для определения долгого нажатия
 
 // Проверка, показывали ли уже сториз
 function checkStoriesShown() {
@@ -780,7 +782,15 @@ function stopStoryTimer() {
 }
 
 // Поставить сториз на паузу (при зажатии)
-function pauseStory() {
+function pauseStory(event) {
+    // Предотвратить двойное срабатывание touch и mouse событий
+    if (event && event.type === 'touchstart') {
+        event.preventDefault();
+    }
+
+    // Запомнить время начала нажатия
+    touchStartTime = Date.now();
+
     if (storyPaused) return;
 
     storyPaused = true;
@@ -800,7 +810,7 @@ function pauseStory() {
 }
 
 // Возобновить сториз (при отпускании)
-function resumeStory() {
+function resumeStory(event) {
     if (!storyPaused) return;
 
     storyPaused = false;
@@ -815,8 +825,20 @@ function resumeStory() {
     startStoryTimer();
 }
 
+// Проверка, было ли долгое нажатие
+function wasLongPress() {
+    const pressDuration = Date.now() - touchStartTime;
+    return pressDuration >= LONG_PRESS_THRESHOLD;
+}
+
 // Следующая история
 function nextStory() {
+    // Если было долгое нажатие (пауза), не переключать
+    if (wasLongPress()) {
+        touchStartTime = 0; // Сбросить
+        return;
+    }
+
     if (currentStoryIndex < totalStories - 1) {
         // Отметить текущую как завершенную
         document.getElementById(`progress-${currentStoryIndex}`).classList.remove('active', 'paused');
@@ -834,6 +856,7 @@ function nextStory() {
         // Сбросить таймер для новой истории
         storyRemainingTime = STORY_DURATION;
         storyPaused = false;
+        touchStartTime = 0;
 
         // На последней истории НЕ запускаем автоматический таймер
         // чтобы дать пользователю время нажать кнопку
@@ -848,6 +871,12 @@ function nextStory() {
 
 // Предыдущая история
 function previousStory() {
+    // Если было долгое нажатие (пауза), не переключать
+    if (wasLongPress()) {
+        touchStartTime = 0; // Сбросить
+        return;
+    }
+
     if (currentStoryIndex > 0) {
         // Убрать активность с текущей
         document.getElementById(`progress-${currentStoryIndex}`).classList.remove('active', 'completed', 'paused');
@@ -865,6 +894,7 @@ function previousStory() {
         // Сбросить таймер для новой истории
         storyRemainingTime = STORY_DURATION;
         storyPaused = false;
+        touchStartTime = 0;
         startStoryTimer(); // Перезапустить таймер
     }
 }
