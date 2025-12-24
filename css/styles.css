@@ -815,6 +815,7 @@ body.app-loaded .container {
 .page {
     display: none;
     animation: fadeInPage 0.3s ease-in-out;
+    padding-bottom: 20px;
 }
 
 .page.active {
@@ -937,21 +938,17 @@ body.app-loaded .container {
 
 /* Добавляем отступ снизу для контента, чтобы не перекрывался меню */
 body {
-    padding-bottom: 70px;
-}
-
-.container {
-    margin-bottom: 20px;
+    padding-bottom: 0;
 }
 
 /* Дополнительный отступ для главной страницы */
 #homePage {
-    padding-bottom: 60px;
+    padding-bottom: 40px;
 }
 
 /* Убираем отступы когда день завершен */
 #homePage.day-completed {
-    padding-bottom: 0;
+    padding-bottom: 20px;
 }
 
 @media (max-width: 600px) {
