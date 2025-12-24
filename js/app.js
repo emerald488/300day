@@ -226,17 +226,20 @@ function checkIfDayCompleted() {
     const messageElement = document.getElementById('dayCompletedMessage');
     const exercisesContainer = document.getElementById('exercisesContainer');
     const completeDayBtn = document.getElementById('completeDayBtn');
+    const homePage = document.getElementById('homePage');
 
     if (isDayCompleted) {
         // Показываем сообщение, скрываем упражнения и кнопку
         messageElement.classList.remove('hidden');
         exercisesContainer.classList.add('hidden');
         completeDayBtn.classList.add('hidden');
+        homePage.classList.add('day-completed');
     } else {
         // Скрываем сообщение, показываем упражнения и кнопку
         messageElement.classList.add('hidden');
         exercisesContainer.classList.remove('hidden');
         completeDayBtn.classList.remove('hidden');
+        homePage.classList.remove('day-completed');
     }
 }
 

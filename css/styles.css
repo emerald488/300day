@@ -949,6 +949,11 @@ body {
     padding-bottom: 60px;
 }
 
+/* Убираем отступы когда день завершен */
+#homePage.day-completed {
+    padding-bottom: 0;
+}
+
 @media (max-width: 600px) {
     .nav-icon {
         font-size: 1.3em;
