@@ -716,6 +716,9 @@ let currentStoryIndex = 0;
 const totalStories = CONFIG.TOTAL_STORIES;
 const STORY_DURATION = 5000; // 5 секунд на сториз
 let storyTimer = null;
+let storyPaused = false;
+let storyStartTime = 0;
+let storyRemainingTime = STORY_DURATION;
 
 // Проверка, показывали ли уже сториз
 function checkStoriesShown() {
@@ -761,10 +764,11 @@ function startStoryTimer() {
         clearTimeout(storyTimer);
     }
 
-    // Запустить таймер на STORY_DURATION миллисекунд
+    // Запустить таймер на оставшееся время
+    storyStartTime = Date.now();
     storyTimer = setTimeout(() => {
         nextStory();
-    }, STORY_DURATION);
+    }, storyRemainingTime);
 }
 
 // Остановить таймер
@@ -775,11 +779,47 @@ function stopStoryTimer() {
     }
 }
 
+// Поставить сториз на паузу (при зажатии)
+function pauseStory() {
+    if (storyPaused) return;
+
+    storyPaused = true;
+
+    // Рассчитать оставшееся время
+    const elapsed = Date.now() - storyStartTime;
+    storyRemainingTime = Math.max(0, storyRemainingTime - elapsed);
+
+    // Остановить таймер
+    stopStoryTimer();
+
+    // Остановить анимацию прогресс-бара
+    const activeProgress = document.getElementById(`progress-${currentStoryIndex}`);
+    if (activeProgress) {
+        activeProgress.classList.add('paused');
+    }
+}
+
+// Возобновить сториз (при отпускании)
+function resumeStory() {
+    if (!storyPaused) return;
+
+    storyPaused = false;
+
+    // Убрать паузу с анимации
+    const activeProgress = document.getElementById(`progress-${currentStoryIndex}`);
+    if (activeProgress) {
+        activeProgress.classList.remove('paused');
+    }
+
+    // Возобновить таймер с оставшимся временем
+    startStoryTimer();
+}
+
 // Следующая история
 function nextStory() {
     if (currentStoryIndex < totalStories - 1) {
         // Отметить текущую как завершенную
-        document.getElementById(`progress-${currentStoryIndex}`).classList.remove('active');
+        document.getElementById(`progress-${currentStoryIndex}`).classList.remove('active', 'paused');
         document.getElementById(`progress-${currentStoryIndex}`).classList.add('completed');
         document.getElementById(`story-${currentStoryIndex}`).classList.remove('active');
 
@@ -790,6 +830,10 @@ function nextStory() {
         document.getElementById(`story-${currentStoryIndex}`).classList.add('active');
 
         updateStoryUI();
+
+        // Сбросить таймер для новой истории
+        storyRemainingTime = STORY_DURATION;
+        storyPaused = false;
 
         // На последней истории НЕ запускаем автоматический таймер
         // чтобы дать пользователю время нажать кнопку
@@ -806,7 +850,7 @@ function nextStory() {
 function previousStory() {
     if (currentStoryIndex > 0) {
         // Убрать активность с текущей
-        document.getElementById(`progress-${currentStoryIndex}`).classList.remove('active', 'completed');
+        document.getElementById(`progress-${currentStoryIndex}`).classList.remove('active', 'completed', 'paused');
         document.getElementById(`story-${currentStoryIndex}`).classList.remove('active');
 
         currentStoryIndex--;
@@ -817,6 +861,10 @@ function previousStory() {
         document.getElementById(`story-${currentStoryIndex}`).classList.add('active');
 
         updateStoryUI();
+
+        // Сбросить таймер для новой истории
+        storyRemainingTime = STORY_DURATION;
+        storyPaused = false;
         startStoryTimer(); // Перезапустить таймер
     }
 }

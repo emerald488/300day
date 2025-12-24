@@ -52,8 +52,20 @@
     <div id="storiesOverlay" class="stories-overlay hidden">
         <div class="stories-container">
             <!-- Tap zones для навигации -->
-            <div class="story-tap-zone story-tap-left" onclick="previousStory()"></div>
-            <div class="story-tap-zone story-tap-right" onclick="nextStory()"></div>
+            <div class="story-tap-zone story-tap-left"
+                 onclick="previousStory()"
+                 ontouchstart="pauseStory()"
+                 ontouchend="resumeStory()"
+                 onmousedown="pauseStory()"
+                 onmouseup="resumeStory()"
+                 onmouseleave="resumeStory()"></div>
+            <div class="story-tap-zone story-tap-right"
+                 onclick="nextStory()"
+                 ontouchstart="pauseStory()"
+                 ontouchend="resumeStory()"
+                 onmousedown="pauseStory()"
+                 onmouseup="resumeStory()"
+                 onmouseleave="resumeStory()"></div>
 
             <div class="stories-progress">
                 <div class="story-progress-bar" id="progress-0">
