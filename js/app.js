@@ -155,7 +155,8 @@ function loadData() {
     const saved = localStorage.getItem('challengeData');
     if (saved) {
         data = JSON.parse(saved);
-        checkForNewDay(); // Проверяем, не наступил ли новый день
+        migrateOldData();  // СНАЧАЛА миграция данных со старой версии
+        checkForNewDay();  // ПОТОМ проверка нового дня
         updateUI();
     }
 
@@ -169,6 +170,35 @@ function loadData() {
     if (savedStoriesDate) {
         lastStoriesShownDate = savedStoriesDate;
     }
+}
+
+// Миграция данных со старой версии (v1.0.6 и ранее)
+function migrateOldData() {
+    // Проверяем флаг миграции
+    const migrated = localStorage.getItem('migrated_v1.0.7');
+    if (migrated) return; // Уже мигрировали
+
+    const today = new Date().toDateString();
+
+    // Если день завершен сегодня и currentDay > 1
+    // значит это старые данные где день был увеличен сразу
+    if (data.lastCompletedDate === today && data.currentDay > 1) {
+        // Откатываем день назад
+        data.currentDay--;
+
+        // Обновляем цели на правильный день
+        data.exercises.pushups.target = data.currentDay;
+        data.exercises.squats.target = data.currentDay;
+        data.exercises.pullups.target = data.currentDay;
+        data.exercises.stairs.target = data.currentDay;
+        data.exercises.plank.target = data.currentDay * CONFIG.PLANK_SECONDS_PER_DAY;
+
+        saveData();
+        console.log(`✅ Migrated from old version: corrected currentDay from ${data.currentDay + 1} to ${data.currentDay}`);
+    }
+
+    // Отмечаем что миграция выполнена
+    localStorage.setItem('migrated_v1.0.7', 'true');
 }
 
 // Проверка наступления нового дня
