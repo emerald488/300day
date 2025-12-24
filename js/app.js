@@ -13,29 +13,34 @@ const CONFIG = {
 
 // Навигация между страницами
 function navigateTo(page) {
-    // Скрываем все страницы
-    document.querySelectorAll('.page').forEach(p => {
-        p.classList.remove('active');
-    });
-
-    // Убираем активный класс со всех кнопок меню
-    document.querySelectorAll('.nav-item').forEach(btn => {
-        btn.classList.remove('active');
-    });
-
-    // Показываем нужную страницу
     const pageId = page + 'Page';
-    const pageElement = document.getElementById(pageId);
-    if (pageElement) {
-        pageElement.classList.add('active');
+    const targetPage = document.getElementById(pageId);
+
+    if (!targetPage) return;
+
+    // Скрываем все страницы, КРОМЕ целевой (чтобы избежать мигания)
+    document.querySelectorAll('.page').forEach(p => {
+        if (p !== targetPage) {
+            p.classList.remove('active');
+        }
+    });
+
+    // Показываем нужную страницу (если она ещё не активна)
+    if (!targetPage.classList.contains('active')) {
+        targetPage.classList.add('active');
     }
 
-    // Активируем соответствующую кнопку меню
+    // Обновляем активную кнопку меню
     const navButtons = document.querySelectorAll('.nav-item');
     const buttonIndex = { 'home': 0, 'stats': 1, 'history': 2, 'settings': 3 };
-    if (buttonIndex[page] !== undefined) {
-        navButtons[buttonIndex[page]].classList.add('active');
-    }
+
+    navButtons.forEach((btn, index) => {
+        if (index === buttonIndex[page]) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
 
     // Обновляем контент для истории, если переходим на эту страницу
     if (page === 'history') {
