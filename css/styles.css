@@ -349,8 +349,6 @@ button:active {
     border-radius: 16px;
     padding: 20px;
     margin-top: 16px;
-    max-height: 600px;
-    overflow-y: auto;
 }
 
 .history h2 {
@@ -862,9 +860,8 @@ body.app-loaded .container {
     padding-top: 0;
 }
 
-#historyPage #history-content {
-    max-height: calc(100vh - 200px);
-    overflow-y: auto;
+#historyPage {
+    padding-bottom: 80px;
 }
 
 #historyPage #history-content:empty::before {
