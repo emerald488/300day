@@ -254,53 +254,66 @@
 
             <!-- Общая статистика -->
             <div class="stats-content">
-                <h3 style="margin-bottom: 15px; font-size: 1.1em;">📊 Общие показатели</h3>
-                <div class="stat-item">
-                    <span>Всего отжиманий:</span>
-                    <span id="total-pushups">0</span>
-                </div>
-                <div class="stat-item">
-                    <span>Всего приседаний:</span>
-                    <span id="total-squats">0</span>
-                </div>
-                <div class="stat-item">
-                    <span>Всего подтягиваний:</span>
-                    <span id="total-pullups">0</span>
-                </div>
-                <div class="stat-item">
-                    <span>Всего пролетов:</span>
-                    <span id="total-stairs">0</span>
-                </div>
-                <div class="stat-item">
-                    <span>Всего планки:</span>
-                    <span id="total-plank">0 мин</span>
-                </div>
-                <div class="stat-item">
-                    <span>Дней подряд:</span>
-                    <span id="streak">0</span>
+                <h3 style="margin-bottom: 20px; font-size: 1.1em;">📊 Общие показатели</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-value" id="total-pushups">0</div>
+                        <div class="stat-label">Отжимания</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🦵</div>
+                        <div class="stat-value" id="total-squats">0</div>
+                        <div class="stat-label">Приседания</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💪</div>
+                        <div class="stat-value" id="total-pullups">0</div>
+                        <div class="stat-label">Подтягивания</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🏃</div>
+                        <div class="stat-value" id="total-stairs">0</div>
+                        <div class="stat-label">Пролеты</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-value" id="total-plank">0 мин</div>
+                        <div class="stat-label">Планка</div>
+                    </div>
+                    <div class="stat-card stat-card-streak">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-value" id="streak">0</div>
+                        <div class="stat-label">Дней подряд</div>
+                    </div>
                 </div>
 
-                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
-                    <h3 style="margin-bottom: 15px; font-size: 1.1em;">📈 Среднее в день</h3>
-                    <div class="stat-item">
-                        <span>Отжимания:</span>
-                        <span id="avg-pushups">0</span>
+                <h3 style="margin-top: 30px; margin-bottom: 20px; font-size: 1.1em;">📈 Среднее в день</h3>
+                <div class="stats-grid">
+                    <div class="stat-card stat-card-avg">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-value" id="avg-pushups">0</div>
+                        <div class="stat-label">Отжимания</div>
                     </div>
-                    <div class="stat-item">
-                        <span>Приседания:</span>
-                        <span id="avg-squats">0</span>
+                    <div class="stat-card stat-card-avg">
+                        <div class="stat-icon">🦵</div>
+                        <div class="stat-value" id="avg-squats">0</div>
+                        <div class="stat-label">Приседания</div>
                     </div>
-                    <div class="stat-item">
-                        <span>Подтягивания:</span>
-                        <span id="avg-pullups">0</span>
+                    <div class="stat-card stat-card-avg">
+                        <div class="stat-icon">💪</div>
+                        <div class="stat-value" id="avg-pullups">0</div>
+                        <div class="stat-label">Подтягивания</div>
                     </div>
-                    <div class="stat-item">
-                        <span>Лестница:</span>
-                        <span id="avg-stairs">0</span>
+                    <div class="stat-card stat-card-avg">
+                        <div class="stat-icon">🏃</div>
+                        <div class="stat-value" id="avg-stairs">0</div>
+                        <div class="stat-label">Лестница</div>
                     </div>
-                    <div class="stat-item">
-                        <span>Планка:</span>
-                        <span id="avg-plank">0 мин</span>
+                    <div class="stat-card stat-card-avg">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-value" id="avg-plank">0 мин</div>
+                        <div class="stat-label">Планка</div>
                     </div>
                 </div>
             </div>
