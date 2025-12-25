@@ -872,11 +872,20 @@ function showStories() {
 
     // Установить первую историю как активную
     currentStoryIndex = 0;
-    document.getElementById('progress-0').classList.add('active');
+
+    // Добавляем класс active с небольшой задержкой для корректного запуска CSS-анимации
+    const firstProgress = document.getElementById('progress-0');
+    void firstProgress.offsetWidth; // Триггер reflow
+    firstProgress.classList.add('active');
+
     document.getElementById('story-0').classList.add('active');
 
     updateStoryUI();
     updateStartButton();
+
+    // Сброс времени перед запуском
+    storyRemainingTime = STORY_DURATION;
+    storyPaused = false;
     startStoryTimer();
 }
 
@@ -948,6 +957,10 @@ function resumeStory(event) {
 
 // Проверка, было ли долгое нажатие
 function wasLongPress() {
+    // Если touchStartTime = 0, значит не было касания вообще (автоматическое переключение)
+    if (touchStartTime === 0) {
+        return false;
+    }
     const pressDuration = Date.now() - touchStartTime;
     return pressDuration >= LONG_PRESS_THRESHOLD;
 }
@@ -962,14 +975,21 @@ function nextStory() {
 
     if (currentStoryIndex < totalStories - 1) {
         // Отметить текущую как завершенную
-        document.getElementById(`progress-${currentStoryIndex}`).classList.remove('active', 'paused');
-        document.getElementById(`progress-${currentStoryIndex}`).classList.add('completed');
+        const currentProgress = document.getElementById(`progress-${currentStoryIndex}`);
+        currentProgress.classList.remove('active', 'paused');
+        currentProgress.classList.add('completed');
         document.getElementById(`story-${currentStoryIndex}`).classList.remove('active');
 
         currentStoryIndex++;
 
         // Показать следующую
-        document.getElementById(`progress-${currentStoryIndex}`).classList.add('active');
+        const nextProgress = document.getElementById(`progress-${currentStoryIndex}`);
+
+        // Сбросить анимацию: убираем класс, принудительно перерисовываем, добавляем обратно
+        nextProgress.classList.remove('active');
+        void nextProgress.offsetWidth; // Триггер reflow для перезапуска анимации
+        nextProgress.classList.add('active');
+
         document.getElementById(`story-${currentStoryIndex}`).classList.add('active');
 
         updateStoryUI();
@@ -979,13 +999,10 @@ function nextStory() {
         storyPaused = false;
         touchStartTime = 0;
 
-        // На последней истории НЕ запускаем автоматический таймер
-        // чтобы дать пользователю время нажать кнопку
-        if (currentStoryIndex < totalStories - 1) {
-            startStoryTimer();
-        }
+        // Запускаем таймер для всех историй, включая последнюю
+        startStoryTimer();
     } else {
-        // На последней истории - закрываем сториз
+        // Достигли конца всех историй - закрываем сториз
         finishStories();
     }
 }
@@ -1006,8 +1023,14 @@ function previousStory() {
         currentStoryIndex--;
 
         // Вернуться к предыдущей
-        document.getElementById(`progress-${currentStoryIndex}`).classList.remove('completed');
-        document.getElementById(`progress-${currentStoryIndex}`).classList.add('active');
+        const prevProgress = document.getElementById(`progress-${currentStoryIndex}`);
+        prevProgress.classList.remove('completed');
+
+        // Сбросить анимацию: убираем класс, принудительно перерисовываем, добавляем обратно
+        prevProgress.classList.remove('active');
+        void prevProgress.offsetWidth; // Триггер reflow для перезапуска анимации
+        prevProgress.classList.add('active');
+
         document.getElementById(`story-${currentStoryIndex}`).classList.add('active');
 
         updateStoryUI();
