@@ -52,6 +52,11 @@ function navigateTo(page) {
             checkIfDayCompleted();
         } else if (page === 'history') {
             renderHistory();
+        } else if (page === 'stats') {
+            // Рисуем графики при переходе на статистику
+            if (typeof renderCharts === 'function') {
+                renderCharts();
+            }
         }
     }
 }
@@ -1208,6 +1213,11 @@ document.addEventListener('DOMContentLoaded', () => {
     loadData();
     updateUI();
     checkStoriesShown();
+
+    // Инициализируем адаптивность графиков
+    if (typeof initChartsResize === 'function') {
+        initChartsResize();
+    }
 });
 
 // Остановка таймера при закрытии страницы

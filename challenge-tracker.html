@@ -233,7 +233,28 @@
             <div class="page-header">
                 <h2><span style="font-size: 0.9em;">📊</span> Статистика</h2>
             </div>
+
+            <!-- График прогресса -->
+            <div class="chart-container">
+                <h3 class="chart-title">📈 Прогресс по упражнениям</h3>
+                <canvas id="progressChart" class="chart-canvas"></canvas>
+            </div>
+
+            <!-- График планки -->
+            <div class="chart-container">
+                <h3 class="chart-title">⏱️ Прогресс планки</h3>
+                <canvas id="plankChart" class="chart-canvas"></canvas>
+            </div>
+
+            <!-- Тепловая карта активности -->
+            <div class="chart-container">
+                <h3 class="chart-title">🔥 Карта активности</h3>
+                <canvas id="activityHeatmap" class="chart-canvas heatmap-canvas"></canvas>
+            </div>
+
+            <!-- Общая статистика -->
             <div class="stats-content">
+                <h3 style="margin-bottom: 15px; font-size: 1.1em;">📊 Общие показатели</h3>
                 <div class="stat-item">
                     <span>Всего отжиманий:</span>
                     <span id="total-pushups">0</span>
@@ -370,6 +391,9 @@
 
     <!-- Stories Data -->
     <script src="js/stories-data.js?v=1"></script>
+
+    <!-- Charts Module -->
+    <script src="js/charts.js?v=1"></script>
 
     <!-- Main Application Script -->
     <script src="js/app.js?v=17"></script>
