@@ -220,29 +220,22 @@ function checkForNewDay() {
 
     // Если день был завершен, но сейчас уже новая дата - переходим к новому дню
     if (data.lastCompletedDate && data.lastCompletedDate !== today) {
-        // Проверяем, была ли дата завершения вчера или раньше
-        const lastCompleted = new Date(data.lastCompletedDate);
-        const now = new Date();
+        // Переход к следующему дню
+        data.currentDay++;
 
-        // Если последнее завершение было в прошлом, переходим к следующему дню
-        if (lastCompleted < now) {
-            // Переход к следующему дню
-            data.currentDay++;
+        // Обновление целевых значений
+        data.exercises.pushups.target = data.currentDay;
+        data.exercises.squats.target = data.currentDay;
+        data.exercises.pullups.target = data.currentDay;
+        data.exercises.stairs.target = data.currentDay;
+        data.exercises.plank.target = data.currentDay * CONFIG.PLANK_SECONDS_PER_DAY;
 
-            // Обновление целевых значений
-            data.exercises.pushups.target = data.currentDay;
-            data.exercises.squats.target = data.currentDay;
-            data.exercises.pullups.target = data.currentDay;
-            data.exercises.stairs.target = data.currentDay;
-            data.exercises.plank.target = data.currentDay * CONFIG.PLANK_SECONDS_PER_DAY;
-
-            // Прогресс уже был сброшен при завершении дня, но на всякий случай
-            for (let exercise in data.exercises) {
-                data.exercises[exercise].current = 0;
-            }
-
-            saveData();
+        // Прогресс уже был сброшен при завершении дня, но на всякий случай
+        for (let exercise in data.exercises) {
+            data.exercises[exercise].current = 0;
         }
+
+        saveData();
     }
 }
 
