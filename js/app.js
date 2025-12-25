@@ -390,6 +390,13 @@ function addReps(exercise, amount) {
 function resetExercise(exercise) {
     if (confirm(`Сбросить прогресс для этого упражнения?`)) {
         data.exercises[exercise].current = 0;
+
+        // Специальная обработка для планки
+        if (exercise === 'plank') {
+            plankStartTime = 0;
+            document.getElementById('plank-timer').textContent = '0:00.00';
+        }
+
         saveData();
         updateUI();
     }
