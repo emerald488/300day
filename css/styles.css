@@ -374,7 +374,7 @@ button:active {
     border: 2px solid #8a5dc2;
     border-radius: 16px;
     padding: 30px 24px;
-    margin-bottom: 30px;
+    margin-bottom: 100px;
     text-align: center;
     animation: slideIn 0.5s ease-out;
     box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
