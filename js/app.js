@@ -168,8 +168,9 @@ function loadData() {
     const saved = localStorage.getItem('challengeData');
     if (saved) {
         data = JSON.parse(saved);
-        migrateOldData();  // СНАЧАЛА миграция данных со старой версии
-        checkForNewDay();  // ПОТОМ проверка нового дня
+        migrateOldData();          // СНАЧАЛА миграция данных со старой версии
+        fixCorruptedDayCount();    // ПОТОМ исправление поврежденных данных
+        checkForNewDay();          // И ТОЛЬКО ПОТОМ проверка нового дня
         updateUI();
     }
 
@@ -214,12 +215,51 @@ function migrateOldData() {
     localStorage.setItem('migrated_v1.0.7', 'true');
 }
 
+// Исправление поврежденного счетчика дней (из-за бага множественного увеличения)
+function fixCorruptedDayCount() {
+    const fixApplied = localStorage.getItem('day_count_fix_applied');
+    if (fixApplied) return; // Уже исправлено
+
+    // Вычислить правильный currentDay на основе истории
+    if (data.history && data.history.length > 0) {
+        const lastHistoryDay = Math.max(...data.history.map(h => h.day));
+        const today = new Date().toDateString();
+
+        // Если день уже завершен сегодня, остаемся на нем
+        // Если нет - переходим к следующему
+        const correctDay = (data.lastCompletedDate === today)
+            ? lastHistoryDay
+            : lastHistoryDay + 1;
+
+        if (data.currentDay !== correctDay) {
+            console.log(`✅ Исправление поврежденных данных: currentDay с ${data.currentDay} на ${correctDay}`);
+            data.currentDay = correctDay;
+
+            // Обновить цели
+            data.exercises.pushups.target = data.currentDay;
+            data.exercises.squats.target = data.currentDay;
+            data.exercises.pullups.target = data.currentDay;
+            data.exercises.stairs.target = data.currentDay;
+            data.exercises.plank.target = data.currentDay * CONFIG.PLANK_SECONDS_PER_DAY;
+
+            saveData();
+        }
+    }
+
+    // Отмечаем что исправление выполнено
+    localStorage.setItem('day_count_fix_applied', 'true');
+}
+
 // Проверка наступления нового дня
 function checkForNewDay() {
     const today = new Date().toDateString();
+    const lastTransitionDate = localStorage.getItem('lastDayTransitionDate');
 
-    // Если день был завершен, но сейчас уже новая дата - переходим к новому дню
-    if (data.lastCompletedDate && data.lastCompletedDate !== today) {
+    // Защита от множественного увеличения дня: проверяем, был ли переход УЖЕ в этот день
+    if (data.lastCompletedDate &&
+        data.lastCompletedDate !== today &&
+        lastTransitionDate !== today) {
+
         // Переход к следующему дню
         data.currentDay++;
 
@@ -235,6 +275,8 @@ function checkForNewDay() {
             data.exercises[exercise].current = 0;
         }
 
+        // Сохранить флаг даты перехода и данные
+        localStorage.setItem('lastDayTransitionDate', today);
         saveData();
     }
 }

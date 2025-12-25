@@ -1,0 +1,192 @@
+{
+  "currentDay": 26,
+  "exercises": {
+    "pushups": {
+      "current": 0,
+      "target": 26
+    },
+    "squats": {
+      "current": 0,
+      "target": 26
+    },
+    "pullups": {
+      "current": 0,
+      "target": 26
+    },
+    "stairs": {
+      "current": 0,
+      "target": 26
+    },
+    "plank": {
+      "current": 0,
+      "target": 78
+    }
+  },
+  "history": [
+    {
+      "day": 6,
+      "date": "24.12.2025",
+      "exercises": {
+        "pushups": {
+          "current": 14,
+          "target": 6
+        },
+        "squats": {
+          "current": 26,
+          "target": 6
+        },
+        "pullups": {
+          "current": 9,
+          "target": 6
+        },
+        "stairs": {
+          "current": 36,
+          "target": 6
+        },
+        "plank": {
+          "current": 39,
+          "target": 18
+        }
+      }
+    },
+    {
+      "day": 5,
+      "date": "23.12.2025",
+      "exercises": {
+        "pushups": {
+          "current": 5,
+          "target": 5
+        },
+        "squats": {
+          "current": 5,
+          "target": 5
+        },
+        "pullups": {
+          "current": 5,
+          "target": 5
+        },
+        "stairs": {
+          "current": 12,
+          "target": 5
+        },
+        "plank": {
+          "current": 30,
+          "target": 15
+        }
+      }
+    },
+    {
+      "day": 4,
+      "date": "22.12.2025",
+      "exercises": {
+        "pushups": {
+          "current": 4,
+          "target": 4
+        },
+        "squats": {
+          "current": 4,
+          "target": 4
+        },
+        "pullups": {
+          "current": 4,
+          "target": 4
+        },
+        "stairs": {
+          "current": 16,
+          "target": 4
+        },
+        "plank": {
+          "current": 31,
+          "target": 12
+        }
+      }
+    },
+    {
+      "day": 3,
+      "date": "22.12.2025",
+      "exercises": {
+        "pushups": {
+          "current": 3,
+          "target": 3
+        },
+        "squats": {
+          "current": 3,
+          "target": 3
+        },
+        "pullups": {
+          "current": 3,
+          "target": 3
+        },
+        "stairs": {
+          "current": 3,
+          "target": 3
+        },
+        "plank": {
+          "current": 10,
+          "target": 9
+        }
+      }
+    },
+    {
+      "day": 2,
+      "date": "22.12.2025",
+      "exercises": {
+        "pushups": {
+          "current": 2,
+          "target": 2
+        },
+        "squats": {
+          "current": 2,
+          "target": 2
+        },
+        "pullups": {
+          "current": 2,
+          "target": 2
+        },
+        "stairs": {
+          "current": 2,
+          "target": 2
+        },
+        "plank": {
+          "current": 7,
+          "target": 6
+        }
+      }
+    },
+    {
+      "day": 1,
+      "date": "22.12.2025",
+      "exercises": {
+        "pushups": {
+          "current": 10,
+          "target": 1
+        },
+        "squats": {
+          "current": 10,
+          "target": 1
+        },
+        "pullups": {
+          "current": 10,
+          "target": 1
+        },
+        "stairs": {
+          "current": 10,
+          "target": 1
+        },
+        "plank": {
+          "current": 10,
+          "target": 3
+        }
+      }
+    }
+  ],
+  "totals": {
+    "pushups": 38,
+    "squats": 50,
+    "pullups": 33,
+    "stairs": 79,
+    "plank": 127
+  },
+  "streak": 3,
+  "lastCompletedDate": "Wed Dec 24 2025"
+}
