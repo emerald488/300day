@@ -843,6 +843,38 @@ let storyRemainingTime = STORY_DURATION;
 let touchStartTime = 0;
 const LONG_PRESS_THRESHOLD = 200; // миллисекунды для определения долгого нажатия
 
+// Получить набор stories для текущего дня недели
+function getTodayStorySet() {
+    const dayOfWeek = new Date().getDay(); // 0-6 (Воскресенье=0, Понедельник=1, ..., Суббота=6)
+    return STORIES_DATA[dayOfWeek];
+}
+
+// Рендеринг контента stories из данных
+function renderStoryContent() {
+    const todayStories = getTodayStorySet();
+
+    todayStories.forEach((story, index) => {
+        const storyElement = document.getElementById(`story-${index}`);
+
+        // Всегда показываем кнопку на последней (4-й) story
+        const buttonHtml = (index === 3)
+            ? '<button class="story-btn primary" id="startChallengeBtn" onclick="finishStories()" style="margin-top: 30px;">Начать челлендж</button>'
+            : '';
+
+        storyElement.innerHTML = `
+            <div>
+                <div class="story-emoji">${story.emoji}</div>
+                <div class="story-title">${story.title}</div>
+                <div class="story-description">${story.text}</div>
+                ${buttonHtml}
+            </div>
+        `;
+    });
+
+    // Обновить текст кнопки в зависимости от дня челленджа
+    updateStartButton();
+}
+
 // Проверка, показывали ли уже сториз
 function checkStoriesShown() {
     const today = new Date().toDateString();
@@ -858,6 +890,9 @@ function checkStoriesShown() {
 
 // Показать сториз
 function showStories() {
+    // Рендерим контент stories для сегодняшнего дня недели
+    renderStoryContent();
+
     // Убрать класс app-loaded, чтобы скрыть основной контент
     document.body.classList.remove('app-loaded');
 

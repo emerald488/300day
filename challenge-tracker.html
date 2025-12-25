@@ -45,7 +45,7 @@
     <!-- /Yandex.Metrika counter -->
 
     <!-- Styles -->
-    <link rel="stylesheet" href="css/styles.css?v=16">
+    <link rel="stylesheet" href="css/styles.css?v=17">
 </head>
 <body>
     <!-- Stories Overlay -->
@@ -83,56 +83,11 @@
             </div>
 
             <div class="stories-content">
-                <!-- Story 1 -->
-                <div class="story-slide" id="story-0">
-                    <div>
-                        <div class="story-emoji">💪</div>
-                        <div class="story-title">Каждый день — это шаг</div>
-                        <div class="story-description">
-                            Сегодня одно повторение, завтра — два, через неделю — семь.
-                            Маленькие шаги складываются в большой путь.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Story 2 -->
-                <div class="story-slide" id="story-1">
-                    <div>
-                        <div class="story-emoji">🔥</div>
-                        <div class="story-title">100 дней — 100 повторений</div>
-                        <div class="story-description">
-                            На сотый день ты выполнишь сотню отжиманий, приседаний и подтягиваний за раз.
-                            Представь свою силу через 100 дней!
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Story 3 -->
-                <div class="story-slide" id="story-2">
-                    <div>
-                        <div class="story-emoji">⚡</div>
-                        <div class="story-title">300 дней — 300 повторений</div>
-                        <div class="story-description">
-                            К финалу твоё тело преодолеет барьер в 300 повторений каждого упражнения
-                            и 15 минут планки. Это не просто цифры — это трансформация.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Story 4 -->
-                <div class="story-slide" id="story-3">
-                    <div>
-                        <div class="story-emoji">🏆</div>
-                        <div class="story-title">Стань легендой</div>
-                        <div class="story-description">
-                            Железная дисциплина, несгибаемая воля и тело, способное на то,
-                            о чём ты раньше только мечтал. Начни прямо сейчас!
-                        </div>
-                        <button class="story-btn primary" id="startChallengeBtn" onclick="finishStories()" style="margin-top: 30px;">
-                            Начать челлендж
-                        </button>
-                    </div>
-                </div>
+                <!-- Stories будут заполнены динамически из stories-data.js -->
+                <div class="story-slide" id="story-0"></div>
+                <div class="story-slide" id="story-1"></div>
+                <div class="story-slide" id="story-2"></div>
+                <div class="story-slide" id="story-3"></div>
             </div>
         </div>
     </div>
@@ -413,7 +368,10 @@
         </div>
     </div>
 
+    <!-- Stories Data -->
+    <script src="js/stories-data.js?v=1"></script>
+
     <!-- Main Application Script -->
-    <script src="js/app.js?v=16"></script>
+    <script src="js/app.js?v=17"></script>
 </body>
 </html>
