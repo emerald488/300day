@@ -798,6 +798,40 @@ async function sendTelegramMessage(message) {
     }
 }
 
+// Отправка документа в Telegram
+async function sendTelegramDocument(jsonData, filename, caption = '') {
+    if (!telegramSettings.enabled || !telegramSettings.botToken || !telegramSettings.chatId) {
+        return false;
+    }
+
+    const url = `https://api.telegram.org/bot${telegramSettings.botToken}/sendDocument`;
+
+    try {
+        // Создаем Blob из JSON данных
+        const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: 'application/json' });
+
+        // Создаем FormData для отправки файла
+        const formData = new FormData();
+        formData.append('chat_id', telegramSettings.chatId);
+        formData.append('document', blob, filename);
+        if (caption) {
+            formData.append('caption', caption);
+            formData.append('parse_mode', 'HTML');
+        }
+
+        const response = await fetch(url, {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+        return result.ok;
+    } catch (error) {
+        console.error('Ошибка отправки документа в Telegram:', error);
+        return false;
+    }
+}
+
 // Сохранение настроек Telegram
 async function saveTelegramSettings() {
     const botToken = document.getElementById('botToken').value.trim();
@@ -863,7 +897,16 @@ async function sendDayCompletedNotification(completedDay, historyEntry) {
 
 💪 Продолжай в том же духе!`;
 
+    // Отправляем текстовое сообщение
     await sendTelegramMessage(message);
+
+    // Формируем имя файла с датой
+    const date = new Date();
+    const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    const filename = `300-challenge-backup-day-${completedDay}-${dateStr}.json`;
+
+    // Отправляем JSON файл с данными (используем весь объект data, как в функции экспорта)
+    await sendTelegramDocument(data, filename, `📦 Бэкап данных после ${completedDay} дня`);
 }
 
 // ==================== STORIES (ОНБОРДИНГ) ====================
