@@ -882,6 +882,7 @@ function disconnectTelegram() {
 async function sendDayCompletedNotification(completedDay, historyEntry) {
     if (!telegramSettings.enabled) return;
 
+    // Формируем сообщение с результатами
     const message = `🎉 <b>День ${completedDay} завершен!</b>
 
 📅 Дата: ${historyEntry.date}
@@ -905,8 +906,8 @@ async function sendDayCompletedNotification(completedDay, historyEntry) {
     const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     const filename = `300-challenge-backup-day-${completedDay}-${dateStr}.json`;
 
-    // Отправляем JSON файл с данными (используем весь объект data, как в функции экспорта)
-    await sendTelegramDocument(data, filename, `📦 Бэкап данных после ${completedDay} дня`);
+    // Отправляем JSON файл с бэкапом данных
+    await sendTelegramDocument(data, filename, `📦 Бэкап данных после дня ${completedDay}`);
 }
 
 // ==================== STORIES (ОНБОРДИНГ) ====================
