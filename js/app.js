@@ -147,7 +147,8 @@ let data = {
         plank: 0
     },
     streak: 0,
-    lastCompletedDate: null
+    lastCompletedDate: null,
+    lastActivityDate: null // Дата последней активности (для автосохранения)
 };
 
 // ==================== НАСТРОЙКИ И СОСТОЯНИЕ ====================
@@ -261,29 +262,89 @@ function checkForNewDay() {
     const lastTransitionDate = localStorage.getItem('lastDayTransitionDate');
 
     // Защита от множественного увеличения дня: проверяем, был ли переход УЖЕ в этот день
-    if (data.lastCompletedDate &&
-        data.lastCompletedDate !== today &&
-        lastTransitionDate !== today) {
+    if (lastTransitionDate === today) {
+        return; // Уже обработали переход на сегодня
+    }
 
-        // Переход к следующему дню
+    // Вычисляем вчерашний день
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toDateString();
+
+    // АВТОСОХРАНЕНИЕ: Если вчера была активность, но день не завершили
+    if (data.lastActivityDate === yesterdayStr &&
+        data.lastCompletedDate !== yesterdayStr) {
+
+        // Проверяем, был ли хоть какой-то прогресс
+        const hasProgress = Object.values(data.exercises).some(ex => ex.current > 0);
+
+        if (hasProgress) {
+            // Автоматически сохраняем вчерашний день в историю
+            const historyEntry = {
+                day: data.currentDay,
+                date: yesterday.toLocaleDateString('ru-RU'),
+                exercises: JSON.parse(JSON.stringify(data.exercises)),
+                autoCompleted: true // Помечаем как автозавершенный
+            };
+            data.history.unshift(historyEntry);
+
+            // Обрезаем историю если превышен лимит
+            if (data.history.length > CONFIG.HISTORY_MAX_ENTRIES) {
+                data.history = data.history.slice(0, CONFIG.HISTORY_MAX_ENTRIES);
+            }
+
+            // Обновляем общую статистику
+            for (let exercise in data.exercises) {
+                data.totals[exercise] += data.exercises[exercise].current;
+            }
+
+            // Обновляем серию дней
+            if (data.lastCompletedDate) {
+                const lastDate = new Date(data.lastCompletedDate);
+                const dayBeforeYesterday = new Date(yesterday);
+                dayBeforeYesterday.setDate(dayBeforeYesterday.getDate() - 1);
+
+                if (lastDate.toDateString() === dayBeforeYesterday.toDateString()) {
+                    data.streak++; // Продолжаем серию
+                } else {
+                    data.streak = 1; // Начинаем новую серию
+                }
+            } else {
+                data.streak = 1; // Первый день
+            }
+
+            // Помечаем вчерашний день как завершенный
+            data.lastCompletedDate = yesterdayStr;
+        }
+    }
+
+    // ПЕРЕХОД НА НОВЫЙ ДЕНЬ: Только если вчера был завершен
+    if (data.lastCompletedDate === yesterdayStr) {
+        // Увеличиваем номер дня
         data.currentDay++;
 
-        // Обновление целевых значений
+        // Обновляем целевые значения для нового дня
         data.exercises.pushups.target = data.currentDay;
         data.exercises.squats.target = data.currentDay;
         data.exercises.pullups.target = data.currentDay;
         data.exercises.stairs.target = data.currentDay;
         data.exercises.plank.target = data.currentDay * CONFIG.PLANK_SECONDS_PER_DAY;
 
-        // Прогресс уже был сброшен при завершении дня, но на всякий случай
+        // Сбрасываем текущий прогресс
         for (let exercise in data.exercises) {
             data.exercises[exercise].current = 0;
         }
 
-        // Сохранить флаг даты перехода и данные
-        localStorage.setItem('lastDayTransitionDate', today);
-        saveData();
+        // Серия продолжается (день был завершен вчера)
+        // Streak уже обновлен в completeDay или автосохранении
+    } else {
+        // День не был завершен вчера - сбрасываем серию
+        data.streak = 0;
     }
+
+    // Сохраняем флаг даты перехода
+    localStorage.setItem('lastDayTransitionDate', today);
+    saveData();
 }
 
 // Сохранение данных в localStorage
@@ -384,6 +445,7 @@ function checkIfDayCompleted() {
 // Добавление повторений
 function addReps(exercise, amount) {
     data.exercises[exercise].current += amount;
+    data.lastActivityDate = new Date().toDateString(); // Отмечаем активность
     if (data.exercises[exercise].current > data.exercises[exercise].target) {
         celebrate();
     }
@@ -457,6 +519,7 @@ function stopPlankTimer() {
 
 function addPlankSeconds(seconds) {
     data.exercises.plank.current += seconds;
+    data.lastActivityDate = new Date().toDateString(); // Отмечаем активность
     document.getElementById('plank-timer').textContent = formatTimeWithMs(data.exercises.plank.current * 1000);
     saveData();
     updateUI();
