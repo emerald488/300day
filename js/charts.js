@@ -429,10 +429,25 @@ function drawActivityHeatmap(canvasId, historyData, weeks = 12) {
     });
 
     // Рисуем ячейки (начиная с сегодня и идем назад)
-    // Определяем день недели для сегодня (0=Воскресенье, 1=Понедельник, ..., 6=Суббота)
-    const todayDayOfWeek = today.getDay();
-    // Преобразуем в формат Пн=0, Вт=1, ..., Вс=6
-    const todayColumn = todayDayOfWeek === 0 ? 6 : todayDayOfWeek - 1;
+    // Функция для получения номера недели относительно сегодня
+    const getWeekNumber = (targetDate, referenceDate) => {
+        // Находим понедельник текущей недели для referenceDate
+        const refDay = referenceDate.getDay();
+        const refMonday = new Date(referenceDate);
+        refMonday.setDate(referenceDate.getDate() - (refDay === 0 ? 6 : refDay - 1));
+        refMonday.setHours(0, 0, 0, 0);
+
+        // Находим понедельник недели для targetDate
+        const targetDay = targetDate.getDay();
+        const targetMonday = new Date(targetDate);
+        targetMonday.setDate(targetDate.getDate() - (targetDay === 0 ? 6 : targetDay - 1));
+        targetMonday.setHours(0, 0, 0, 0);
+
+        // Разница в неделях
+        const diffMs = refMonday - targetMonday;
+        const diffWeeks = Math.floor(diffMs / (7 * 24 * 60 * 60 * 1000));
+        return diffWeeks;
+    };
 
     // Проходим по всем дням начиная с сегодня
     for (let i = 0; i < totalDays; i++) {
@@ -443,8 +458,8 @@ function drawActivityHeatmap(canvasId, historyData, weeks = 12) {
         const dayOfWeek = date.getDay();
         const row = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
 
-        // Определяем колонку (неделю)
-        const col = Math.floor((i + todayColumn) / 7);
+        // Определяем колонку (неделю) относительно сегодняшней недели
+        const col = getWeekNumber(date, today);
 
         // Пропускаем если вышли за границы
         if (col >= weeks) continue;
