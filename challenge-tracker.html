@@ -26,8 +26,8 @@
     <link rel="apple-touch-icon" href="icon-192.png">
 
     <!-- Preload критических ресурсов -->
-    <link rel="preload" href="css/styles.css?v=31" as="style">
-    <link rel="preload" href="js/app.js?v=31" as="script">
+    <link rel="preload" href="css/styles.css?v=34" as="style">
+    <link rel="preload" href="js/app.js?v=34" as="script">
 
     <!-- DNS Prefetch для внешних ресурсов -->
     <link rel="dns-prefetch" href="https://unpkg.com">
@@ -80,7 +80,7 @@
     </style>
 
     <!-- Styles - загружается асинхронно -->
-    <link rel="stylesheet" href="css/styles.css?v=31">
+    <link rel="stylesheet" href="css/styles.css?v=34">
 </head>
 <body>
     <!-- Stories Overlay -->
@@ -506,39 +506,52 @@
         </button>
     </div>
 
-    <!-- Панель настройки Telegram -->
-    <div id="telegramSetupOverlay" class="settings-overlay hidden" onclick="closeTelegramSetupOnOverlay(event)">
-        <div class="telegram-setup" onclick="event.stopPropagation()">
-            <h2><span style="font-size: 0.9em;">📱</span> Настройка Telegram</h2>
-
-            <div id="telegramStatusDisplay" class="telegram-status disconnected">
-                Telegram не подключен
+    <!-- Панель настройки Telegram (DaisyUI Modal) -->
+    <div id="telegramSetupOverlay" class="modal" onclick="closeTelegramSetupOnOverlay(event)">
+        <div class="modal-box max-w-lg" style="background: #2d2d2d; border: 1px solid #404040;" onclick="event.stopPropagation()">
+            <!-- Статус подключения -->
+            <div id="telegramStatusDisplay" style="padding: 12px; border-radius: 8px; text-align: center; font-weight: 600; background: #424242; border: 1px solid #5a5a5a; margin-bottom: 24px;">
+                <span id="telegramStatusText">Telegram не подключен</span>
             </div>
 
-            <h3>📋 Инструкция:</h3>
-            <ol style="font-size: 0.9em;">
-                <li>Открой Telegram и найди бота <a href="https://t.me/botfather" target="_blank">@BotFather</a></li>
-                <li>Отправь команду <code>/newbot</code> и следуй инструкциям</li>
-                <li>Скопируй полученный токен (выглядит как <code>123456:ABC-DEF...</code>)</li>
-                <li>Найди бота <a href="https://t.me/userinfobot" target="_blank">@userinfobot</a></li>
-                <li>Отправь ему любое сообщение, он пришлет твой Chat ID</li>
-                <li>Введи токен и Chat ID в поля ниже</li>
-            </ol>
-
-            <div class="form-group">
-                <label for="botToken">Токен бота:</label>
-                <input type="text" id="botToken" placeholder="123456789:ABCdefGHIjklMNOpqrsTUVwxyz" autocomplete="off">
+            <!-- Инструкция -->
+            <div class="collapse collapse-arrow" style="background: #353535; border: 1px solid #4a4a4a; border-radius: 8px; margin-bottom: 24px;">
+                <input type="checkbox" class="peer" />
+                <div class="collapse-title font-medium" style="font-size: 0.95em;">
+                    📋 Инструкция по подключению
+                </div>
+                <div class="collapse-content" style="font-size: 0.9em; line-height: 1.8;">
+                    <ol class="list-decimal list-inside space-y-2">
+                        <li>Открой Telegram и найди бота <a href="https://t.me/botfather" target="_blank" style="color: #2196F3; text-decoration: none;">@BotFather</a></li>
+                        <li>Отправь команду <code style="background: #424242; padding: 2px 6px; border-radius: 4px; font-family: monospace;">/newbot</code> и следуй инструкциям</li>
+                        <li>Скопируй полученный токен (выглядит как <code style="background: #424242; padding: 2px 6px; border-radius: 4px; font-family: monospace;">123456:ABC-DEF...</code>)</li>
+                        <li>Найди бота <a href="https://t.me/userinfobot" target="_blank" style="color: #2196F3; text-decoration: none;">@userinfobot</a></li>
+                        <li>Отправь ему любое сообщение, он пришлет твой Chat ID</li>
+                        <li>Введи токен и Chat ID в поля ниже</li>
+                    </ol>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="chatId">Chat ID:</label>
-                <input type="text" id="chatId" placeholder="123456789" autocomplete="off">
+            <!-- Форма -->
+            <div class="form-control mb-4">
+                <label class="label pb-1">
+                    <span class="label-text font-semibold" style="font-size: 0.95em;">Токен бота:</span>
+                </label>
+                <input type="text" id="botToken" placeholder="123456789:ABCdefGHIjklMNOpqrsTUVwxyz" class="input input-bordered w-full font-mono" style="background: #353535; border-color: #4a4a4a; font-size: 0.9em;" autocomplete="off">
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="saveTelegramSettings()" class="btn btn-success">Сохранить и проверить</button>
-                <button onclick="disconnectTelegram()" class="btn btn-error">Отключить Telegram</button>
-                <button onclick="toggleTelegramSetup()" class="btn btn-neutral">Закрыть</button>
+            <div class="form-control mb-6">
+                <label class="label pb-1">
+                    <span class="label-text font-semibold" style="font-size: 0.95em;">Chat ID:</span>
+                </label>
+                <input type="text" id="chatId" placeholder="123456789" class="input input-bordered w-full font-mono" style="background: #353535; border-color: #4a4a4a;" autocomplete="off">
+            </div>
+
+            <!-- Кнопки -->
+            <div class="modal-action flex-col gap-3 mt-5">
+                <button onclick="saveTelegramSettings()" class="btn btn-success w-full">Сохранить и проверить</button>
+                <button onclick="disconnectTelegram()" class="btn btn-error w-full">Отключить Telegram</button>
+                <button onclick="toggleTelegramSetup()" class="btn btn-neutral w-full">Закрыть</button>
             </div>
         </div>
     </div>
@@ -550,7 +563,7 @@
     <script src="js/charts.js?v=3"></script>
 
     <!-- Main Application Script -->
-    <script src="js/app.js?v=31"></script>
+    <script src="js/app.js?v=34"></script>
 
     <!-- Lucide Icons - асинхронная загрузка -->
     <script src="https://unpkg.com/lucide@latest" async onload="lucide.createIcons()"></script>

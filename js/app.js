@@ -837,7 +837,8 @@ function openTelegramSetup() {
 
 // Переключение панели Telegram
 function toggleTelegramSetup() {
-    togglePanel('telegramSetupOverlay');
+    const modal = document.getElementById('telegramSetupOverlay');
+    modal.classList.toggle('modal-open');
 }
 
 // Закрытие при клике на затемненную область
@@ -850,12 +851,16 @@ function closeTelegramSetupOnOverlay(event) {
 // Обновление статуса подключения
 function updateTelegramStatus() {
     const statusDisplay = document.getElementById('telegramStatusDisplay');
+    const statusText = document.getElementById('telegramStatusText');
+
     if (telegramSettings.enabled && telegramSettings.botToken && telegramSettings.chatId) {
-        statusDisplay.className = 'telegram-status connected';
-        statusDisplay.textContent = '✅ Telegram подключен';
+        statusDisplay.style.background = '#1b5e20';
+        statusDisplay.style.borderColor = '#4CAF50';
+        statusText.textContent = '✅ Telegram подключен';
     } else {
-        statusDisplay.className = 'telegram-status disconnected';
-        statusDisplay.textContent = 'Telegram не подключен';
+        statusDisplay.style.background = '#424242';
+        statusDisplay.style.borderColor = '#5a5a5a';
+        statusText.textContent = 'Telegram не подключен';
     }
 }
 
