@@ -1,4 +1,4 @@
-const CACHE_NAME = '300-challenge-v34';
+const CACHE_NAME = '300-challenge-v35';
 const urlsToCache = [
   './challenge-tracker.html',
   './manifest.json',
@@ -7,7 +7,9 @@ const urlsToCache = [
   './js/stories-data.js',
   './js/charts.js',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  // Кешируем внешние зависимости для офлайн и быстрого старта
+  'https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css'
 ];
 
 // Установка Service Worker и кеширование файлов
@@ -47,37 +49,28 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
-  // Игнорируем запросы к service worker и внешним доменам
-  if (url.pathname.includes('service-worker.js') ||
-      !url.origin.includes(self.location.origin)) {
+  // Игнорируем запросы к service worker
+  if (url.pathname.includes('service-worker.js')) {
     return;
   }
 
-  // Для HTML, CSS, JS используем Network First (всегда пытаемся получить свежую версию)
-  if (url.pathname.endsWith('.html') || url.pathname.endsWith('.css') || url.pathname.endsWith('.js')) {
-    event.respondWith(
-      fetch(event.request)
-        .then(networkResponse => {
-          // Обновляем кеш свежей версией
-          if (networkResponse && networkResponse.status === 200) {
-            const responseToCache = networkResponse.clone();
-            caches.open(CACHE_NAME).then(cache => {
-              cache.put(event.request, responseToCache);
-            });
-          }
-          return networkResponse;
-        })
-        .catch(() => {
-          // Если сеть недоступна, используем кеш
-          return caches.match(event.request);
-        })
-    );
-  } else {
-    // Для остальных файлов (картинки, шрифты) используем Cache First
-    event.respondWith(
-      caches.match(event.request)
-        .then(response => {
-          return response || fetch(event.request).then(networkResponse => {
+  // Игнорируем внешние запросы (кроме CDN с ресурсами)
+  const isCDNResource = url.hostname.includes('cdn.jsdelivr.net') ||
+                        url.hostname.includes('unpkg.com');
+
+  if (!url.origin.includes(self.location.origin) && !isCDNResource) {
+    return;
+  }
+
+  // СТРАТЕГИЯ: Cache First с фоновым обновлением (stale-while-revalidate)
+  // Мгновенная загрузка из кеша + обновление в фоне
+  event.respondWith(
+    caches.match(event.request)
+      .then(cachedResponse => {
+        // Запускаем фоновое обновление
+        const fetchPromise = fetch(event.request)
+          .then(networkResponse => {
+            // Обновляем кеш свежей версией в фоне
             if (networkResponse && networkResponse.status === 200) {
               const responseToCache = networkResponse.clone();
               caches.open(CACHE_NAME).then(cache => {
@@ -85,8 +78,11 @@ self.addEventListener('fetch', event => {
               });
             }
             return networkResponse;
-          });
-        })
-    );
-  }
+          })
+          .catch(() => null); // Игнорируем ошибки сети в фоновом режиме
+
+        // Возвращаем кеш СРАЗУ (если есть), иначе ждем сеть
+        return cachedResponse || fetchPromise;
+      })
+  );
 });
