@@ -103,7 +103,7 @@ function togglePanel(elementId, hideOtherIds = []) {
 // ==================== PWA / SERVICE WORKER ====================
 
 // Регистрация Service Worker для PWA - АВТОМАТИЧЕСКОЕ ОБНОВЛЕНИЕ
-// Версия SW: v37 - Оптимизирован порядок загрузки: loadData() → updateUI()
+// Версия SW: v38 - Stories проверяются ДО рендера UI (нет мигания)
 if ('serviceWorker' in navigator) {
     // Автоматическая перезагрузка при обновлении Service Worker
     let refreshing = false;
@@ -118,7 +118,7 @@ if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/300day/service-worker.js', { scope: '/300day/' })
             .then(registration => {
-                console.log('Service Worker зарегистрирован (v37)');
+                console.log('Service Worker зарегистрирован (v38)');
 
                 // Принудительная проверка обновлений при загрузке
                 if (registration.waiting) {
@@ -1060,14 +1060,17 @@ function renderStoryContent() {
 }
 
 // Проверка, показывали ли уже сториз
+// Возвращает true если stories показываются, false если нет
 function checkStoriesShown() {
     const today = new Date().toDateString();
 
     // Если сториз не показывались сегодня, показать их
     if (lastStoriesShownDate !== today) {
         showStories();
+        return true; // Stories показываются
     }
-    // Контент показывается всегда (убрали opacity:0), поэтому app-loaded не нужен
+
+    return false; // Stories не показываются
 }
 
 // Показать сториз
@@ -1289,6 +1292,9 @@ function finishStories() {
 
     // Сбросить индекс (очистка состояния произойдет при следующем открытии)
     currentStoryIndex = 0;
+
+    // Отрисовываем UI после закрытия stories
+    updateUI();
 }
 
 // ==================== ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ ====================
@@ -1309,11 +1315,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // ЭТАП 1: Загружаем и обрабатываем данные (БЕЗ отрисовки)
     loadData();
 
-    // ЭТАП 2: Только после загрузки данных рисуем UI
-    updateUI();
+    // ЭТАП 2: Проверяем нужно ли показать stories (ДО отрисовки UI!)
+    // Если stories показываются - основной UI скрыт
+    const shouldShowStories = checkStoriesShown();
 
-    // ЭТАП 3: Проверяем нужно ли показать stories
-    checkStoriesShown();
+    // ЭТАП 3: Рисуем UI только если stories НЕ показываются
+    // (если stories активны, UI отрисуется после их закрытия)
+    if (!shouldShowStories) {
+        updateUI();
+    }
 
     // Инициализируем адаптивность графиков
     if (typeof initChartsResize === 'function') {
