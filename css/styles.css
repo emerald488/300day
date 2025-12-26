@@ -49,9 +49,7 @@ body {
     margin: 0 auto;
     width: 100%;
     box-sizing: border-box;
-    min-height: calc(100vh - 70px); /* Фиксируем минимальную высоту */
     position: relative;
-    padding-bottom: 80px; /* Отступ для нижнего меню */
 }
 
 .header {
@@ -903,22 +901,12 @@ body.app-loaded .container {
 
 /* Страницы приложения */
 .page {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    padding-bottom: 20px;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.15s ease-in-out, visibility 0s linear 0.15s;
-    pointer-events: none;
+    display: none;
+    padding-bottom: 80px; /* Отступ для нижнего меню */
 }
 
 .page.active {
-    opacity: 1;
-    visibility: visible;
-    transition: opacity 0.15s ease-in-out, visibility 0s linear 0s;
-    pointer-events: auto;
+    display: block;
 }
 
 .page-header {
