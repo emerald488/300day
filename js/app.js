@@ -21,47 +21,51 @@ function navigateTo(page) {
     // Проверяем, уже ли мы на этой странице
     const isAlreadyActive = targetPage.classList.contains('active');
 
-    // Сбрасываем скролл в начало для предотвращения скачков
-    window.scrollTo(0, 0);
+    // Если уже на этой странице, ничего не делаем
+    if (isAlreadyActive) return;
 
-    // Скрываем все страницы, КРОМЕ целевой (чтобы избежать мигания)
-    document.querySelectorAll('.page').forEach(p => {
-        if (p !== targetPage) {
-            p.classList.remove('active');
-        }
-    });
-
-    // Показываем нужную страницу (если она ещё не активна)
-    if (!isAlreadyActive) {
-        targetPage.classList.add('active');
-    }
-
-    // Обновляем активную кнопку меню
-    const navButtons = document.querySelectorAll('.nav-item');
-    const buttonIndex = { 'home': 0, 'stats': 1, 'history': 2, 'settings': 3 };
-
-    navButtons.forEach((btn, index) => {
-        if (index === buttonIndex[page]) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
-    });
-
-    // Обновляем контент только если реально перешли на новую страницу
-    if (!isAlreadyActive) {
-        if (page === 'home') {
-            // Обновляем UI только при реальном переходе на главную
-            checkIfDayCompleted();
-        } else if (page === 'history') {
-            renderHistory();
-        } else if (page === 'stats') {
-            // Рисуем графики при переходе на статистику
-            if (typeof renderCharts === 'function') {
-                renderCharts();
+    // Используем requestAnimationFrame для синхронизации с render cycle
+    requestAnimationFrame(() => {
+        // Скрываем все страницы, КРОМЕ целевой (чтобы избежать мигания)
+        document.querySelectorAll('.page').forEach(p => {
+            if (p !== targetPage) {
+                p.classList.remove('active');
             }
-        }
-    }
+        });
+
+        // Показываем нужную страницу
+        targetPage.classList.add('active');
+
+        // Обновляем активную кнопку меню
+        const navButtons = document.querySelectorAll('.nav-item');
+        const buttonIndex = { 'home': 0, 'stats': 1, 'history': 2, 'settings': 3 };
+
+        navButtons.forEach((btn, index) => {
+            if (index === buttonIndex[page]) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        // Сбрасываем скролл ПОСЛЕ переключения страниц
+        window.scrollTo(0, 0);
+
+        // Обновляем контент в следующем фрейме для плавности
+        requestAnimationFrame(() => {
+            if (page === 'home') {
+                // Обновляем UI только при реальном переходе на главную
+                checkIfDayCompleted();
+            } else if (page === 'history') {
+                renderHistory();
+            } else if (page === 'stats') {
+                // Рисуем графики при переходе на статистику
+                if (typeof renderCharts === 'function') {
+                    renderCharts();
+                }
+            }
+        });
+    });
 }
 
 // Форматирование секунд в MM:SS (без миллисекунд)
