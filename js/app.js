@@ -103,7 +103,7 @@ function togglePanel(elementId, hideOtherIds = []) {
 // ==================== PWA / SERVICE WORKER ====================
 
 // Регистрация Service Worker для PWA - АВТОМАТИЧЕСКОЕ ОБНОВЛЕНИЕ
-// Версия SW: v39 - Весь контейнер скрыт до загрузки данных
+// Версия SW: v40 - Удалены дефолтные значения из HTML
 if ('serviceWorker' in navigator) {
     // Автоматическая перезагрузка при обновлении Service Worker
     let refreshing = false;
@@ -118,7 +118,7 @@ if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/300day/service-worker.js', { scope: '/300day/' })
             .then(registration => {
-                console.log('Service Worker зарегистрирован (v39)');
+                console.log('Service Worker зарегистрирован (v40)');
 
                 // Принудительная проверка обновлений при загрузке
                 if (registration.waiting) {
