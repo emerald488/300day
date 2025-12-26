@@ -103,7 +103,7 @@ function togglePanel(elementId, hideOtherIds = []) {
 // ==================== PWA / SERVICE WORKER ====================
 
 // Регистрация Service Worker для PWA - АВТОМАТИЧЕСКОЕ ОБНОВЛЕНИЕ
-// Версия SW: v38 - Stories проверяются ДО рендера UI (нет мигания)
+// Версия SW: v39 - Весь контейнер скрыт до загрузки данных
 if ('serviceWorker' in navigator) {
     // Автоматическая перезагрузка при обновлении Service Worker
     let refreshing = false;
@@ -118,7 +118,7 @@ if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/300day/service-worker.js', { scope: '/300day/' })
             .then(registration => {
-                console.log('Service Worker зарегистрирован (v38)');
+                console.log('Service Worker зарегистрирован (v39)');
 
                 // Принудительная проверка обновлений при загрузке
                 if (registration.waiting) {
@@ -374,6 +374,12 @@ function saveData() {
 function updateUI() {
     const today = new Date().toDateString();
     const isDayCompleted = data.lastCompletedDate === today;
+
+    // Показываем контейнер (был скрыт для предотвращения мигания)
+    const container = document.querySelector('.container');
+    if (container) {
+        container.style.opacity = '1';
+    }
 
     // Отображаем номер дня с меткой "ЗАВЕРШЕН" если день выполнен
     if (isDayCompleted) {

@@ -1,9 +1,9 @@
 {
   "name": "300 Day Challenge",
   "short_name": "300 Challenge",
-  "version": "1.0.28",
+  "version": "1.0.29",
   "description": "300-дневный челлендж: отжимания, приседания, подтягивания, лестница и планка",
-  "start_url": "./challenge-tracker.html?v=38",
+  "start_url": "./challenge-tracker.html?v=39",
   "display": "standalone",
   "background_color": "#667eea",
   "theme_color": "#667eea",
