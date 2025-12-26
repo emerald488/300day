@@ -563,5 +563,187 @@ function renderCharts() {
 
     // Рисуем тепловую карту активности
     drawActivityHeatmap('activityHeatmap', data.history, 12);
+
+    // Инициализируем обработчики кликов для графиков
+    initChartInteractions();
+}
+
+// ==================== ИНТЕРАКТИВНОСТЬ ГРАФИКОВ ====================
+
+/**
+ * Инициализация обработчиков кликов для графиков
+ */
+function initChartInteractions() {
+    const progressCanvas = document.getElementById('progressChart');
+    const plankCanvas = document.getElementById('plankChart');
+
+    if (progressCanvas) {
+        progressCanvas.onclick = (e) => handleChartClick(e, 'progressChart', 'progressChartTooltip');
+    }
+
+    if (plankCanvas) {
+        plankCanvas.onclick = (e) => handleChartClick(e, 'plankChart', 'plankChartTooltip');
+    }
+
+    // Закрытие тултипа при клике вне графика
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.chart-canvas')) {
+            hideAllTooltips();
+        }
+    });
+}
+
+/**
+ * Обработка клика по графику
+ */
+function handleChartClick(event, canvasId, tooltipId) {
+    const canvas = document.getElementById(canvasId);
+    const tooltip = document.getElementById(tooltipId);
+
+    if (!canvas || !tooltip) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    // Получаем данные для графика
+    const chartData = currentChartPeriod === 'all'
+        ? data.history.slice().reverse()
+        : data.history.slice(0, currentChartPeriod).reverse();
+
+    if (chartData.length === 0) return;
+
+    // Вычисляем параметры графика (должны совпадать с drawProgressChart/drawPlankChart)
+    const padding = { top: 45, right: 20, bottom: 40, left: 50 };
+    const chartWidth = rect.width - padding.left - padding.right;
+
+    // Находим ближайшую точку данных
+    let closestIndex = -1;
+    let minDistance = Infinity;
+
+    chartData.forEach((_, index) => {
+        const pointX = padding.left + (chartWidth / (chartData.length - 1)) * index;
+        const distance = Math.abs(x - pointX);
+
+        if (distance < minDistance && distance < 30) { // 30px - радиус чувствительности
+            minDistance = distance;
+            closestIndex = index;
+        }
+    });
+
+    if (closestIndex === -1) {
+        tooltip.classList.add('hidden');
+        return;
+    }
+
+    // Получаем данные для выбранного дня
+    const dayData = chartData[closestIndex];
+
+    // Формируем содержимое тултипа
+    let tooltipHTML = `<div class="tooltip-title">День ${dayData.day}</div>`;
+
+    if (canvasId === 'progressChart') {
+        // Тултип для графика прогресса
+        const exercises = [
+            { key: 'pushups', label: 'Отжимания', color: '#2196F3' },
+            { key: 'squats', label: 'Приседания', color: '#4CAF50' },
+            { key: 'pullups', label: 'Подтягивания', color: '#FF9800' },
+            { key: 'stairs', label: 'Лестница', color: '#9C27B0' }
+        ];
+
+        exercises.forEach(ex => {
+            const current = dayData.exercises[ex.key]?.current || 0;
+            const target = dayData.exercises[ex.key]?.target || 0;
+            const percent = target > 0 ? Math.round((current / target) * 100) : 0;
+
+            tooltipHTML += `
+                <div class="tooltip-item">
+                    <span class="tooltip-label">
+                        <span class="tooltip-color-dot" style="background: ${ex.color}"></span>
+                        ${ex.label}
+                    </span>
+                    <span class="tooltip-value">${current}/${target} (${percent}%)</span>
+                </div>
+            `;
+        });
+    } else if (canvasId === 'plankChart') {
+        // Тултип для графика планки
+        const current = dayData.exercises.plank?.current || 0;
+        const target = dayData.exercises.plank?.target || 0;
+        const percent = target > 0 ? Math.round((current / target) * 100) : 0;
+
+        const formatTime = (seconds) => {
+            const min = Math.floor(seconds / 60);
+            const sec = seconds % 60;
+            return `${min}:${sec.toString().padStart(2, '0')}`;
+        };
+
+        tooltipHTML += `
+            <div class="tooltip-item">
+                <span class="tooltip-label">
+                    <span class="tooltip-color-dot" style="background: #4CAF50"></span>
+                    Выполнено
+                </span>
+                <span class="tooltip-value">${formatTime(current)}</span>
+            </div>
+            <div class="tooltip-item">
+                <span class="tooltip-label">Цель</span>
+                <span class="tooltip-value">${formatTime(target)}</span>
+            </div>
+            <div class="tooltip-item">
+                <span class="tooltip-label">Прогресс</span>
+                <span class="tooltip-value">${percent}%</span>
+            </div>
+        `;
+    }
+
+    tooltip.innerHTML = tooltipHTML;
+
+    // Позиционируем тултип
+    const pointX = padding.left + (chartWidth / (chartData.length - 1)) * closestIndex;
+
+    // Показываем тултип справа или слева от точки в зависимости от позиции
+    const tooltipWidth = 200; // примерная ширина тултипа
+    let tooltipX = pointX + 15;
+
+    if (pointX + tooltipWidth > rect.width - padding.right) {
+        tooltipX = pointX - tooltipWidth - 15;
+    }
+
+    tooltip.style.left = `${tooltipX}px`;
+    tooltip.style.top = `${y - 80}px`; // Немного выше курсора
+
+    tooltip.classList.remove('hidden');
+}
+
+/**
+ * Скрыть все тултипы
+ */
+function hideAllTooltips() {
+    const tooltips = document.querySelectorAll('.chart-tooltip');
+    tooltips.forEach(tooltip => tooltip.classList.add('hidden'));
+}
+
+/**
+ * Изменение периода отображения графиков
+ */
+function changeChartPeriod(period, buttonElement) {
+    currentChartPeriod = period;
+
+    // Обновляем активную вкладку (для DaisyUI tabs)
+    const tabs = document.querySelectorAll('.chart-period-selector .tab');
+    tabs.forEach(tab => {
+        tab.classList.remove('tab-active');
+    });
+
+    if (buttonElement) {
+        buttonElement.classList.add('tab-active');
+    }
+
+    // Скрываем все тултипы
+    hideAllTooltips();
+
+    // Перерисовываем графики
+    renderCharts();
 }
 
