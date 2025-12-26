@@ -1,4 +1,4 @@
-const CACHE_NAME = '300-challenge-v25';
+const CACHE_NAME = '300-challenge-v26';
 const urlsToCache = [
   './challenge-tracker.html',
   './manifest.json',
@@ -46,6 +46,12 @@ self.addEventListener('activate', event => {
 // Перехват запросов и работа с кешем
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
+
+  // Игнорируем запросы к service worker и внешним доменам
+  if (url.pathname.includes('service-worker.js') ||
+      !url.origin.includes(self.location.origin)) {
+    return;
+  }
 
   // Для HTML, CSS, JS используем Network First (всегда пытаемся получить свежую версию)
   if (url.pathname.endsWith('.html') || url.pathname.endsWith('.css') || url.pathname.endsWith('.js')) {

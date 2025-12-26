@@ -115,16 +115,24 @@ if ('serviceWorker' in navigator) {
     });
 
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js')
+        navigator.serviceWorker.register('/300day/service-worker.js', { scope: '/300day/' })
             .then(registration => {
                 console.log('Service Worker зарегистрирован');
 
                 // Принудительная проверка обновлений при загрузке
-                registration.update();
+                if (registration.waiting) {
+                    registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+                }
+
+                registration.update().catch(err => {
+                    console.log('Ошибка при обновлении SW:', err);
+                });
 
                 // Проверка обновлений каждый час
                 setInterval(() => {
-                    registration.update();
+                    registration.update().catch(err => {
+                        console.log('Ошибка при обновлении SW:', err);
+                    });
                 }, CONFIG.UPDATE_CHECK_INTERVAL_MS);
             })
             .catch(error => {
