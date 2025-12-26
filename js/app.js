@@ -21,6 +21,9 @@ function navigateTo(page) {
     // Проверяем, уже ли мы на этой странице
     const isAlreadyActive = targetPage.classList.contains('active');
 
+    // Сбрасываем скролл в начало для предотвращения скачков
+    window.scrollTo(0, 0);
+
     // Скрываем все страницы, КРОМЕ целевой (чтобы избежать мигания)
     document.querySelectorAll('.page').forEach(p => {
         if (p !== targetPage) {

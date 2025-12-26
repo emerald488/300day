@@ -26,6 +26,8 @@ body {
     color: #ffffff;
     overflow-x: hidden;
     max-width: 100vw;
+    overflow-y: scroll; /* Всегда показываем скроллбар для предотвращения сдвигов */
+    overscroll-behavior-y: contain; /* Предотвращаем bounce эффект на iOS */
 }
 
 .container {
@@ -33,6 +35,8 @@ body {
     margin: 0 auto;
     width: 100%;
     box-sizing: border-box;
+    min-height: calc(100vh - 70px); /* Фиксируем минимальную высоту */
+    position: relative;
 }
 
 .header {
@@ -886,10 +890,13 @@ body.app-loaded .container {
 .page {
     display: none;
     padding-bottom: 20px;
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
 }
 
 .page.active {
     display: block;
+    opacity: 1;
 }
 
 .page-header {
@@ -961,6 +968,7 @@ body.app-loaded .container {
     justify-content: center;
     background: transparent;
     border: none;
+    outline: none;
     color: #888;
     padding: 8px 16px;
     cursor: pointer;
@@ -968,6 +976,10 @@ body.app-loaded .container {
     min-height: auto;
     flex: 1;
     max-width: 100px;
+}
+
+.nav-item:focus {
+    outline: none;
 }
 
 .nav-item:hover {
