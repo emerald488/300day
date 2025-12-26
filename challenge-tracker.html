@@ -48,7 +48,7 @@
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
 
     <!-- Styles -->
-    <link rel="stylesheet" href="css/styles.css?v=18">
+    <link rel="stylesheet" href="css/styles.css?v=19">
 </head>
 <body>
     <!-- Stories Overlay -->
@@ -351,19 +351,19 @@
     <!-- Нижнее меню навигации -->
     <div class="bottom-nav">
         <button class="nav-item active" onclick="navigateTo('home')">
-            <span class="nav-icon">🏠</span>
+            <i data-lucide="home" class="nav-icon"></i>
             <span class="nav-label">Главная</span>
         </button>
         <button class="nav-item" onclick="navigateTo('stats')">
-            <span class="nav-icon">📊</span>
+            <i data-lucide="bar-chart-3" class="nav-icon"></i>
             <span class="nav-label">Статистика</span>
         </button>
         <button class="nav-item" onclick="navigateTo('history')">
-            <span class="nav-icon">📜</span>
+            <i data-lucide="clock" class="nav-icon"></i>
             <span class="nav-label">История</span>
         </button>
         <button class="nav-item" onclick="navigateTo('settings')">
-            <span class="nav-icon">⚙️</span>
+            <i data-lucide="settings" class="nav-icon"></i>
             <span class="nav-label">Настройки</span>
         </button>
     </div>
@@ -413,5 +413,12 @@
 
     <!-- Main Application Script -->
     <script src="js/app.js?v=17"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Инициализация Lucide иконок
+        lucide.createIcons();
+    </script>
 </body>
 </html>

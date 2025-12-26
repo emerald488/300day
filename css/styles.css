@@ -984,8 +984,10 @@ body.app-loaded .container {
 }
 
 .nav-icon {
-    font-size: 1.5em;
+    width: 24px;
+    height: 24px;
     margin-bottom: 4px;
+    stroke-width: 2;
 }
 
 .nav-label {
@@ -1011,7 +1013,8 @@ body {
 
 @media (max-width: 600px) {
     .nav-icon {
-        font-size: 1.3em;
+        width: 20px;
+        height: 20px;
         margin-bottom: 2px;
     }
 
