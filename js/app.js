@@ -1274,6 +1274,17 @@ function finishStories() {
 
 // ==================== ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ ====================
 
+// Фиксируем высоту viewport для мобильных устройств (исправление для Android)
+function setVhVariable() {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+// Вызываем при загрузке и изменении размера
+setVhVariable();
+window.addEventListener('resize', setVhVariable);
+window.addEventListener('orientationchange', setVhVariable);
+
 // Инициализация при загрузке DOM (до загрузки всех ресурсов)
 document.addEventListener('DOMContentLoaded', () => {
     loadData();
@@ -1284,6 +1295,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof initChartsResize === 'function') {
         initChartsResize();
     }
+
+    // Устанавливаем правильную высоту viewport
+    setVhVariable();
 });
 
 // Остановка таймера при закрытии страницы

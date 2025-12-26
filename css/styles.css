@@ -4,6 +4,16 @@
     box-sizing: border-box;
 }
 
+html {
+    height: 100%;
+    height: -webkit-fill-available;
+}
+
+/* CSS переменные для фиксированной высоты viewport */
+:root {
+    --vh: 1vh;
+}
+
 /* Убрать синюю подсветку при тапе на Android/iOS */
 button,
 a,
@@ -22,12 +32,16 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     background: #1a1a1a;
     min-height: 100vh;
+    min-height: -webkit-fill-available; /* Для Safari iOS */
     padding: 12px;
     color: #ffffff;
     overflow-x: hidden;
     max-width: 100vw;
     overflow-y: scroll; /* Всегда показываем скроллбар для предотвращения сдвигов */
     overscroll-behavior-y: contain; /* Предотвращаем bounce эффект на iOS */
+    /* Фиксируем высоту для Android */
+    height: 100%;
+    position: relative;
 }
 
 .container {
@@ -37,6 +51,7 @@ body {
     box-sizing: border-box;
     min-height: calc(100vh - 70px); /* Фиксируем минимальную высоту */
     position: relative;
+    padding-bottom: 80px; /* Отступ для нижнего меню */
 }
 
 .header {
@@ -888,15 +903,22 @@ body.app-loaded .container {
 
 /* Страницы приложения */
 .page {
-    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     padding-bottom: 20px;
     opacity: 0;
-    transition: opacity 0.15s ease-in-out;
+    visibility: hidden;
+    transition: opacity 0.15s ease-in-out, visibility 0s linear 0.15s;
+    pointer-events: none;
 }
 
 .page.active {
-    display: block;
     opacity: 1;
+    visibility: visible;
+    transition: opacity 0.15s ease-in-out, visibility 0s linear 0s;
+    pointer-events: auto;
 }
 
 .page-header {
@@ -959,6 +981,12 @@ body.app-loaded .container {
     padding: 8px 0;
     z-index: 999;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+    /* КРИТИЧНО для Android - предотвращаем сдвиг меню */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
 .nav-item {
