@@ -26,8 +26,8 @@
     <link rel="apple-touch-icon" href="icon-192.png">
 
     <!-- Preload критических ресурсов -->
-    <link rel="preload" href="css/styles.css?v=26" as="style">
-    <link rel="preload" href="js/app.js?v=26" as="script">
+    <link rel="preload" href="css/styles.css?v=27" as="style">
+    <link rel="preload" href="js/app.js?v=27" as="script">
 
     <!-- DNS Prefetch для внешних ресурсов -->
     <link rel="dns-prefetch" href="https://unpkg.com">
@@ -80,7 +80,7 @@
     </style>
 
     <!-- Styles - загружается асинхронно -->
-    <link rel="stylesheet" href="css/styles.css?v=26">
+    <link rel="stylesheet" href="css/styles.css?v=27">
 </head>
 <body>
     <!-- Stories Overlay -->
@@ -365,14 +365,115 @@
         <!-- Страница Настроек -->
         <div id="settingsPage" class="page">
             <div class="page-header">
-                <h2><span style="font-size: 0.9em;">⚙️</span> Настройки</h2>
+                <h2>⚙️ Настройки</h2>
             </div>
-            <div class="settings-buttons">
-                <button onclick="openTelegramSetup()" class="btn btn-neutral"><span style="font-size: 0.9em;">📱</span> Подключить Telegram</button>
-                <button onclick="forceUpdateApp()" class="btn btn-neutral"><span style="font-size: 0.9em;">🔄</span> Обновить приложение</button>
-                <button onclick="exportData()" class="btn btn-neutral"><span style="font-size: 0.9em;">💾</span> Экспорт данных</button>
-                <button onclick="document.getElementById('importFile').click()" class="btn btn-neutral"><span style="font-size: 0.9em;">📥</span> Импорт данных</button>
-                <button onclick="resetAll()" class="btn btn-error"><span style="font-size: 0.9em;">🗑️</span> Сброс всего</button>
+
+            <div class="settings-content">
+                <!-- Секция: Интеграции -->
+                <div class="settings-section">
+                    <h3 class="settings-section-title">Интеграции</h3>
+                    <div class="settings-menu">
+                        <div class="settings-item" onclick="openTelegramSetup()">
+                            <div class="settings-item-left">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                                <div class="settings-item-content">
+                                    <div class="settings-item-title">Telegram</div>
+                                    <div class="settings-item-description">Подключить уведомления</div>
+                                </div>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="settings-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Секция: Данные -->
+                <div class="settings-section">
+                    <h3 class="settings-section-title">Данные</h3>
+                    <div class="settings-menu">
+                        <div class="settings-item" onclick="exportData()">
+                            <div class="settings-item-left">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                <div class="settings-item-content">
+                                    <div class="settings-item-title">Экспорт данных</div>
+                                    <div class="settings-item-description">Сохранить резервную копию</div>
+                                </div>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="settings-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
+
+                        <div class="settings-item" onclick="document.getElementById('importFile').click()">
+                            <div class="settings-item-left">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                <div class="settings-item-content">
+                                    <div class="settings-item-title">Импорт данных</div>
+                                    <div class="settings-item-description">Восстановить из файла</div>
+                                </div>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="settings-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Секция: Приложение -->
+                <div class="settings-section">
+                    <h3 class="settings-section-title">Приложение</h3>
+                    <div class="settings-menu">
+                        <div class="settings-item" onclick="forceUpdateApp()">
+                            <div class="settings-item-left">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="23 4 23 10 17 10"></polyline>
+                                    <polyline points="1 20 1 14 7 14"></polyline>
+                                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                                </svg>
+                                <div class="settings-item-content">
+                                    <div class="settings-item-title">Обновить приложение</div>
+                                    <div class="settings-item-description">Проверить обновления</div>
+                                </div>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="settings-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Секция: Опасная зона -->
+                <div class="settings-section">
+                    <h3 class="settings-section-title settings-section-danger">Опасная зона</h3>
+                    <div class="settings-menu">
+                        <div class="settings-item settings-item-danger" onclick="resetAll()">
+                            <div class="settings-item-left">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                                <div class="settings-item-content">
+                                    <div class="settings-item-title">Сброс всех данных</div>
+                                    <div class="settings-item-description">Удалить все данные и начать заново</div>
+                                </div>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="settings-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -444,7 +545,7 @@
     <script src="js/charts.js?v=1"></script>
 
     <!-- Main Application Script -->
-    <script src="js/app.js?v=26"></script>
+    <script src="js/app.js?v=27"></script>
 
     <!-- Lucide Icons - асинхронная загрузка -->
     <script src="https://unpkg.com/lucide@latest" async onload="lucide.createIcons()"></script>
