@@ -103,7 +103,7 @@ function togglePanel(elementId, hideOtherIds = []) {
 // ==================== PWA / SERVICE WORKER ====================
 
 // Регистрация Service Worker для PWA - АВТОМАТИЧЕСКОЕ ОБНОВЛЕНИЕ
-// Версия SW: v35 - Cache First (stale-while-revalidate) для быстрого старта
+// Версия SW: v37 - Оптимизирован порядок загрузки: loadData() → updateUI()
 if ('serviceWorker' in navigator) {
     // Автоматическая перезагрузка при обновлении Service Worker
     let refreshing = false;
@@ -118,7 +118,7 @@ if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/300day/service-worker.js', { scope: '/300day/' })
             .then(registration => {
-                console.log('Service Worker зарегистрирован (v35)');
+                console.log('Service Worker зарегистрирован (v37)');
 
                 // Принудительная проверка обновлений при загрузке
                 if (registration.waiting) {
@@ -193,7 +193,7 @@ function loadData() {
         migrateOldData();          // СНАЧАЛА миграция данных со старой версии
         fixCorruptedDayCount();    // ПОТОМ исправление поврежденных данных
         checkForNewDay();          // И ТОЛЬКО ПОТОМ проверка нового дня
-        updateUI();
+        // updateUI() убран - вызывается снаружи после loadData()
     }
 
     const savedTelegram = localStorage.getItem('telegramSettings');
@@ -396,31 +396,34 @@ function updateUI() {
     document.getElementById('daysProgressPercentage').textContent = `${daysPercentage}%`;
     document.getElementById('daysProgressText').textContent = `${completedDays} / ${CONFIG.TOTAL_DAYS} дней`;
 
-    // Проверяем, выполнена ли сегодняшняя тренировка
+    // Сначала определяем что показывать
     checkIfDayCompleted();
 
-    for (let exercise in data.exercises) {
-        const ex = data.exercises[exercise];
-        const percentage = Math.min((ex.current / ex.target) * 100, 100);
+    // Обновляем упражнения только если день не завершен
+    if (!isDayCompleted) {
+        for (let exercise in data.exercises) {
+            const ex = data.exercises[exercise];
+            const percentage = Math.min((ex.current / ex.target) * 100, 100);
 
-        if (exercise === 'plank') {
-            document.getElementById(`${exercise}-progress`).textContent =
-                `${formatTime(ex.current)}/${formatTime(ex.target)}`;
-        } else {
-            document.getElementById(`${exercise}-progress`).textContent = `${ex.current}/${ex.target}`;
-        }
+            if (exercise === 'plank') {
+                document.getElementById(`${exercise}-progress`).textContent =
+                    `${formatTime(ex.current)}/${formatTime(ex.target)}`;
+            } else {
+                document.getElementById(`${exercise}-progress`).textContent = `${ex.current}/${ex.target}`;
+            }
 
-        // Не обновляем прогресс-бар планки если таймер активен (он обновляется отдельно)
-        if (exercise !== 'plank' || !plankInterval) {
-            document.getElementById(`${exercise}-bar`).style.width = `${percentage}%`;
-        }
+            // Не обновляем прогресс-бар планки если таймер активен (он обновляется отдельно)
+            if (exercise !== 'plank' || !plankInterval) {
+                document.getElementById(`${exercise}-bar`).style.width = `${percentage}%`;
+            }
 
-        // Добавляем класс completed если цель достигнута
-        const item = document.getElementById(`${exercise}-item`);
-        if (ex.current >= ex.target) {
-            item.classList.add('completed');
-        } else {
-            item.classList.remove('completed');
+            // Добавляем класс completed если цель достигнута
+            const item = document.getElementById(`${exercise}-item`);
+            if (ex.current >= ex.target) {
+                item.classList.add('completed');
+            } else {
+                item.classList.remove('completed');
+            }
         }
     }
 
@@ -451,8 +454,14 @@ function checkIfDayCompleted() {
         // Скрываем сообщение, показываем упражнения и кнопку
         messageElement.classList.add('hidden');
         exercisesContainer.classList.remove('hidden');
+        exercisesContainer.style.opacity = '1'; // Плавно показываем
         completeDayBtn.classList.remove('hidden');
+        completeDayBtn.style.opacity = '1'; // Плавно показываем
         homePage.classList.remove('day-completed');
+    } else if (!isDayCompleted) {
+        // Первая загрузка - показываем упражнения если день не завершен
+        exercisesContainer.style.opacity = '1';
+        completeDayBtn.style.opacity = '1';
     }
 }
 
@@ -1297,8 +1306,13 @@ window.addEventListener('orientationchange', setVhVariable);
 
 // Инициализация при загрузке DOM (до загрузки всех ресурсов)
 document.addEventListener('DOMContentLoaded', () => {
+    // ЭТАП 1: Загружаем и обрабатываем данные (БЕЗ отрисовки)
     loadData();
+
+    // ЭТАП 2: Только после загрузки данных рисуем UI
     updateUI();
+
+    // ЭТАП 3: Проверяем нужно ли показать stories
     checkStoriesShown();
 
     // Инициализируем адаптивность графиков
