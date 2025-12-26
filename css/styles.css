@@ -919,17 +919,6 @@ body.stories-open .bottom-nav {
     display: block;
 }
 
-.page-header {
-    text-align: center;
-    padding: 30px 20px 20px;
-}
-
-.page-header h2 {
-    font-size: 1.8em;
-    font-weight: 700;
-    margin-bottom: 10px;
-}
-
 .stats-content {
     background: #2d2d2d;
     border: 1px solid #404040;
@@ -939,10 +928,7 @@ body.stories-open .bottom-nav {
 }
 
 #historyPage {
-    padding-top: 0;
-}
-
-#historyPage {
+    padding-top: 20px;
     padding-bottom: 80px;
 }
 
@@ -958,7 +944,7 @@ body.stories-open .bottom-nav {
 #settingsPage .settings-content {
     background: transparent;
     border: none;
-    padding: 0 12px;
+    padding: 20px 12px 0 12px;
     margin-top: 0;
 }
 
@@ -1230,6 +1216,7 @@ body {
 
 /* Отступ снизу для страницы статистики */
 #statsPage {
+    padding-top: 20px;
     padding-bottom: 80px;
 }
 
