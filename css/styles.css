@@ -643,16 +643,21 @@ body.stories-open .bottom-nav {
     display: none;
 }
 
-/* Скрыть основной контент пока не загрузилось приложение */
+/* Контент показывается сразу для мгновенной загрузки */
 .container {
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-body.app-loaded .container {
     opacity: 1;
     pointer-events: auto;
+    /* Небольшая анимация появления для плавности */
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 /* Stories */

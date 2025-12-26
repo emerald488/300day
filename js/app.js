@@ -1043,19 +1043,14 @@ function checkStoriesShown() {
     // Если сториз не показывались сегодня, показать их
     if (lastStoriesShownDate !== today) {
         showStories();
-    } else {
-        // Если сториз уже показывались, сразу показать основной контент
-        document.body.classList.add('app-loaded');
     }
+    // Контент показывается всегда (убрали opacity:0), поэтому app-loaded не нужен
 }
 
 // Показать сториз
 function showStories() {
     // Рендерим контент stories для сегодняшнего дня недели
     renderStoryContent();
-
-    // Убрать класс app-loaded, чтобы скрыть основной контент
-    document.body.classList.remove('app-loaded');
 
     document.getElementById('storiesOverlay').classList.remove('hidden');
     document.body.classList.add('stories-open');
@@ -1263,9 +1258,6 @@ function finishStories() {
 
     document.getElementById('storiesOverlay').classList.add('hidden');
     document.body.classList.remove('stories-open');
-
-    // Показать основной контент
-    document.body.classList.add('app-loaded');
 
     // Сохранить дату показа сториз
     const today = new Date().toDateString();
