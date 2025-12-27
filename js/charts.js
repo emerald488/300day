@@ -125,21 +125,21 @@ function drawProgressChart(canvasId, historyData, maxDays = 30) {
         });
     });
 
-    // Подписи по X (дни)
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-    ctx.font = '10px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto';
-    ctx.textAlign = 'center';
+    // Подписи по X (дни) - убраны для предотвращения наложения
+    // ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+    // ctx.font = '10px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto';
+    // ctx.textAlign = 'center';
 
-    // Адаптивное количество подписей в зависимости от количества данных
-    const maxLabels = chartData.length > 60 ? 10 : 7;
-    const labelStep = Math.max(1, Math.floor(chartData.length / maxLabels));
+    // // Адаптивное количество подписей в зависимости от количества данных
+    // const maxLabels = chartData.length > 60 ? 10 : 7;
+    // const labelStep = Math.max(1, Math.floor(chartData.length / maxLabels));
 
-    chartData.forEach((day, index) => {
-        if (index % labelStep === 0 || index === chartData.length - 1) {
-            const x = padding.left + (chartWidth / (chartData.length - 1)) * index;
-            ctx.fillText(`День ${day.day}`, x, height - padding.bottom + 20);
-        }
-    });
+    // chartData.forEach((day, index) => {
+    //     if (index % labelStep === 0 || index === chartData.length - 1) {
+    //         const x = padding.left + (chartWidth / (chartData.length - 1)) * index;
+    //         ctx.fillText(`День ${day.day}`, x, height - padding.bottom + 20);
+    //     }
+    // });
 
     // Легенда (располагаем в 2 ряда по 2 элемента)
     const legendStartX = padding.left;
@@ -318,20 +318,20 @@ function drawPlankChart(canvasId, historyData, maxDays = 'all') {
         ctx.stroke();
     });
 
-    // Подписи по X (дни)
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-    ctx.font = '10px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto';
-    ctx.textAlign = 'center';
+    // Подписи по X (дни) - убраны для предотвращения наложения
+    // ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+    // ctx.font = '10px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto';
+    // ctx.textAlign = 'center';
 
-    const maxLabels = chartData.length > 60 ? 10 : 7;
-    const labelStep = Math.max(1, Math.floor(chartData.length / maxLabels));
+    // const maxLabels = chartData.length > 60 ? 10 : 7;
+    // const labelStep = Math.max(1, Math.floor(chartData.length / maxLabels));
 
-    chartData.forEach((day, index) => {
-        if (index % labelStep === 0 || index === chartData.length - 1) {
-            const x = padding.left + (chartWidth / (chartData.length - 1)) * index;
-            ctx.fillText(`День ${day.day}`, x, height - padding.bottom + 20);
-        }
-    });
+    // chartData.forEach((day, index) => {
+    //     if (index % labelStep === 0 || index === chartData.length - 1) {
+    //         const x = padding.left + (chartWidth / (chartData.length - 1)) * index;
+    //         ctx.fillText(`День ${day.day}`, x, height - padding.bottom + 20);
+    //     }
+    // });
 
     // Заголовок оси Y
     ctx.save();
