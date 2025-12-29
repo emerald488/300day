@@ -234,7 +234,7 @@ body {
 }
 
 /* Базовые стили для кнопок (переопределяем для совместимости с DaisyUI) */
-button:not(.btn) {
+button:not(.btn):not(.nav-item) {
     background: #424242;
     border: 1px solid #5a5a5a;
     color: white;
@@ -248,12 +248,12 @@ button:not(.btn) {
     touch-action: manipulation;
 }
 
-button:not(.btn):hover {
+button:not(.btn):not(.nav-item):hover {
     background: #4a4a4a;
     border-color: #6a6a6a;
 }
 
-button:not(.btn):active {
+button:not(.btn):not(.nav-item):active {
     transform: scale(0.95);
 }
 
@@ -994,16 +994,18 @@ body.stories-open .bottom-nav {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #888;
-    padding: 8px 16px;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 6px 8px;
     cursor: pointer;
     transition: all 0.2s ease;
-    min-height: auto;
+    min-height: auto !important;
     flex: 1;
     max-width: 100px;
+    border-radius: 0 !important;
 }
 
 .nav-item:focus {
@@ -1011,12 +1013,13 @@ body.stories-open .bottom-nav {
 }
 
 .nav-item:hover {
-    background: transparent;
-    color: #aaa;
+    background: transparent !important;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .nav-item.active {
     color: #667eea;
+    background: transparent !important;
 }
 
 .nav-item:active {
@@ -1024,16 +1027,22 @@ body.stories-open .bottom-nav {
 }
 
 .nav-icon {
-    width: 24px;
-    height: 24px;
-    margin-bottom: 4px;
+    width: 26px;
+    height: 26px;
+    margin-bottom: 3px;
     stroke-width: 2;
+    transition: all 0.2s ease;
+}
+
+.nav-item.active .nav-icon {
+    stroke-width: 2.5;
 }
 
 .nav-label {
-    font-size: 0.7em;
+    font-size: 0.68em;
     font-weight: 600;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.03em;
+    transition: all 0.2s ease;
 }
 
 /* Добавляем отступ снизу для контента, чтобы не перекрывался меню */
