@@ -46,7 +46,7 @@ function drawProgressChart(canvasId, historyData, maxDays = 30) {
         : historyData.slice(0, maxDays).reverse();
 
     // Настройки отступов
-    const padding = { top: 45, right: 20, bottom: 40, left: 50 };
+    const padding = { top: 55, right: 20, bottom: 40, left: 50 };
     const chartWidth = width - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
 
@@ -91,6 +91,27 @@ function drawProgressChart(canvasId, historyData, maxDays = 30) {
         pullups: '#FF9800',   // Оранжевый
         stairs: '#9C27B0'     // Фиолетовый
     };
+
+    // Рисуем пунктирную линию цели (план)
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([5, 5]); // Пунктирная линия
+    ctx.beginPath();
+
+    chartData.forEach((day, index) => {
+        const x = padding.left + (chartWidth / (chartData.length - 1)) * index;
+        const targetValue = day.day; // Цель = номер дня
+        const y = padding.top + chartHeight - (targetValue / maxValue) * chartHeight;
+
+        if (index === 0) {
+            ctx.moveTo(x, y);
+        } else {
+            ctx.lineTo(x, y);
+        }
+    });
+
+    ctx.stroke();
+    ctx.setLineDash([]); // Сброс пунктира для следующих линий
 
     // Рисуем линии для каждого упражнения
     exercises.forEach(exercise => {
@@ -141,7 +162,7 @@ function drawProgressChart(canvasId, historyData, maxDays = 30) {
     //     }
     // });
 
-    // Легенда (располагаем в 2 ряда по 2 элемента)
+    // Легенда (располагаем в 3 ряда: 2 элемента, 2 элемента, 1 элемент)
     const legendStartX = padding.left;
     const legendStartY = 10;
     const legendItemWidth = width / 2 - padding.left / 2; // Делим пополам
@@ -176,6 +197,23 @@ function drawProgressChart(canvasId, historyData, maxDays = 30) {
         ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
         ctx.fillText(labels[ex], x + 20, y + 4);
     });
+
+    // Добавляем элемент "План" в легенду
+    const planRow = 2;
+    const planX = legendStartX;
+    const planY = legendStartY + planRow * legendRowHeight;
+
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath();
+    ctx.moveTo(planX, planY);
+    ctx.lineTo(planX + 16, planY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+    ctx.fillText('📊 План', planX + 20, planY + 4);
 }
 
 // ==================== ГРАФИК ПЛАНКИ ====================
@@ -255,6 +293,27 @@ function drawPlankChart(canvasId, historyData, maxDays = 'all') {
         ctx.textAlign = 'right';
         ctx.fillText(label, padding.left - 10, y + 4);
     }
+
+    // Рисуем пунктирную линию цели (план) для планки
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([5, 5]); // Пунктирная линия
+    ctx.beginPath();
+
+    chartData.forEach((day, index) => {
+        const x = padding.left + (chartWidth / (chartData.length - 1)) * index;
+        const targetValue = day.exercises.plank?.target || (day.day * 3); // Цель = день × 3 секунды
+        const y = padding.top + chartHeight - (targetValue / maxSeconds) * chartHeight;
+
+        if (index === 0) {
+            ctx.moveTo(x, y);
+        } else {
+            ctx.lineTo(x, y);
+        }
+    });
+
+    ctx.stroke();
+    ctx.setLineDash([]); // Сброс пунктира
 
     // Рисуем линию и область под ней
     const gradient = ctx.createLinearGradient(0, padding.top, 0, height - padding.bottom);
@@ -614,7 +673,7 @@ function handleChartClick(event, canvasId, tooltipId) {
     if (chartData.length === 0) return;
 
     // Вычисляем параметры графика (должны совпадать с drawProgressChart/drawPlankChart)
-    const padding = { top: 45, right: 20, bottom: 40, left: 50 };
+    const padding = { top: 55, right: 20, bottom: 40, left: 50 };
     const chartWidth = rect.width - padding.left - padding.right;
 
     // Находим ближайшую точку данных
