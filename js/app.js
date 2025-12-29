@@ -1303,6 +1303,65 @@ function finishStories() {
     updateUI();
 }
 
+// ==================== РОТАЦИЯ ПОДЗАГОЛОВКОВ ====================
+
+// Массив мотивирующих подзаголовков
+const ROTATING_SUBTITLES = [
+    'Путь к легенде начинается здесь',
+    'Каждый день делает тебя сильнее',
+    'Твоя сила растёт с каждым повторением',
+    'Превзойди себя вчерашнего',
+    'Дисциплина побеждает мотивацию',
+    'Ты уже на пути к цели',
+    'Маленькие шаги ведут к большим результатам',
+    'Твоё будущее создаётся сегодня'
+];
+
+let currentSubtitleIndex = 0;
+let subtitleRotationTimer = null;
+
+// Функция смены подзаголовка с плавной анимацией
+function rotateSubtitle() {
+    const subtitleElement = document.getElementById('rotatingSubtitle');
+    if (!subtitleElement) return;
+
+    // Плавное исчезновение
+    subtitleElement.style.opacity = '0';
+
+    // Через 500мс (время fade-out) меняем текст и показываем
+    setTimeout(() => {
+        currentSubtitleIndex = (currentSubtitleIndex + 1) % ROTATING_SUBTITLES.length;
+        subtitleElement.textContent = ROTATING_SUBTITLES[currentSubtitleIndex];
+        subtitleElement.style.opacity = '0.85';
+    }, 500);
+}
+
+// Запуск ротации подзаголовков
+function startSubtitleRotation() {
+    // Останавливаем предыдущий таймер, если есть
+    if (subtitleRotationTimer) {
+        clearInterval(subtitleRotationTimer);
+    }
+
+    // Случайный начальный подзаголовок
+    currentSubtitleIndex = Math.floor(Math.random() * ROTATING_SUBTITLES.length);
+    const subtitleElement = document.getElementById('rotatingSubtitle');
+    if (subtitleElement) {
+        subtitleElement.textContent = ROTATING_SUBTITLES[currentSubtitleIndex];
+    }
+
+    // Меняем подзаголовок каждые 5 секунд
+    subtitleRotationTimer = setInterval(rotateSubtitle, 5000);
+}
+
+// Остановка ротации (при необходимости)
+function stopSubtitleRotation() {
+    if (subtitleRotationTimer) {
+        clearInterval(subtitleRotationTimer);
+        subtitleRotationTimer = null;
+    }
+}
+
 // ==================== ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ ====================
 
 // Фиксируем высоту viewport для мобильных устройств (исправление для Android)
@@ -1338,6 +1397,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Устанавливаем правильную высоту viewport
     setVhVariable();
+
+    // Запускаем ротацию подзаголовков
+    startSubtitleRotation();
 });
 
 // Остановка таймера при закрытии страницы

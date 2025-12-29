@@ -26,8 +26,8 @@
     <link rel="apple-touch-icon" href="icon-192.png">
 
     <!-- Preload критических ресурсов -->
-    <link rel="preload" href="css/styles.css?v=41" as="style">
-    <link rel="preload" href="js/app.js?v=41" as="script">
+    <link rel="preload" href="css/styles.css?v=42" as="style">
+    <link rel="preload" href="js/app.js?v=42" as="script">
 
     <!-- DNS Prefetch для внешних ресурсов -->
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
@@ -103,7 +103,7 @@
     </style>
 
     <!-- Styles - загружается асинхронно -->
-    <link rel="stylesheet" href="css/styles.css?v=41">
+    <link rel="stylesheet" href="css/styles.css?v=42">
 </head>
 <body>
     <!-- Stories Overlay -->
@@ -155,7 +155,7 @@
         <div id="homePage" class="page active">
             <div class="header">
                 <h1 style="font-size: 2.5em; margin-bottom: 8px; margin-top: 20px; font-weight: 700; letter-spacing: -0.02em;">300 Day Challenge</h1>
-                <div class="subtitle" style="margin-bottom: 15px; font-size: 1.1em; opacity: 0.85;">Путь к легенде начинается здесь</div>
+                <div class="subtitle" id="rotatingSubtitle" style="margin-bottom: 15px; font-size: 1.1em; opacity: 0.85; transition: opacity 0.5s ease;">Путь к легенде начинается здесь</div>
 
                 <div class="day-counter" id="dayCounter" style="font-size: 3.5em; font-weight: 700; margin-bottom: 10px;"></div>
                 <div id="currentDate" style="font-size: 1em; opacity: 0.75; margin-bottom: 15px;"></div>
@@ -598,7 +598,7 @@
     <script src="js/charts.js?v=3"></script>
 
     <!-- Main Application Script -->
-    <script src="js/app.js?v=41"></script>
+    <script src="js/app.js?v=42"></script>
 
     <!-- Yandex.Metrika counter - перенесен вниз для неблокирующей загрузки -->
     <script type="text/javascript" async>
