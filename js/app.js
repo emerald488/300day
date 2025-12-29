@@ -1357,8 +1357,8 @@ function startSubtitleRotation() {
         subtitleElement.textContent = ROTATING_SUBTITLES[currentSubtitleIndex];
     }
 
-    // Меняем подзаголовок каждые 8 секунд
-    subtitleRotationTimer = setInterval(rotateSubtitle, 8000);
+    // Меняем подзаголовок каждые 5 секунд
+    subtitleRotationTimer = setInterval(rotateSubtitle, 5000);
 }
 
 // Остановка ротации (при необходимости)
