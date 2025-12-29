@@ -1030,8 +1030,8 @@ body.stories-open .bottom-nav {
 }
 
 .nav-icon {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     margin-bottom: 4px;
     stroke-width: 2;
     transition: all 0.2s ease;
@@ -1042,7 +1042,7 @@ body.stories-open .bottom-nav {
 }
 
 .nav-label {
-    font-size: 0.7em;
+    font-size: 0.75em;
     font-weight: 600;
     letter-spacing: 0.02em;
     transition: all 0.2s ease;
