@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/challenge-tracker.html",
+      "permanent": false
+    }
+  ]
+}
