@@ -1462,7 +1462,7 @@ function createSnowflakes() {
         snowflake.style.fontSize = `${fontSize}em`;
         snowflake.style.animationDuration = `${duration}s`;
         snowflake.style.animationDelay = `${delay}s`;
-        snowflake.style.opacity = Math.random() * 0.6 + 0.4; // Прозрачность от 0.4 до 1
+        snowflake.style.opacity = Math.random() * 0.42 + 0.28; // Прозрачность от 0.28 до 0.7
 
         snowflakesContainer.appendChild(snowflake);
     }

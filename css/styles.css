@@ -1497,10 +1497,10 @@ body {
 .snowflake {
     position: absolute;
     top: -10px;
-    color: #fff;
+    color: rgba(255, 255, 255, 0.7);
     font-size: 1em;
     font-family: Arial, sans-serif;
-    text-shadow: 0 0 5px #fff;
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
     animation: snowfall linear infinite;
     user-select: none;
 }
