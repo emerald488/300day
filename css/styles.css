@@ -102,6 +102,11 @@ body {
     font-size: 1.2em;
     opacity: 0.9;
     margin-top: 20px;
+    min-height: 5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .days-progress-container {
@@ -772,6 +777,7 @@ body.stories-open .bottom-nav {
 
     .subtitle {
         font-size: 1em;
+        min-height: 4.5em;
     }
 
     .exercise-controls {
