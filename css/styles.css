@@ -514,6 +514,21 @@ button:not(.btn):not(.nav-item):active {
     box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
 }
 
+/* Streak display внутри фиолетовой плашки */
+.day-completed-message .streak-display {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0 auto 25px;
+}
+
+.day-completed-message .streak-display:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: transparent;
+}
+
 .day-completed-icon {
     font-size: 4em;
     margin-bottom: 20px;
@@ -839,6 +854,12 @@ body.stories-open .bottom-nav {
         gap: 12px;
         padding: 15px 20px;
         margin: 15px auto;
+    }
+
+    /* Streak display внутри фиолетовой плашки на мобильных */
+    .day-completed-message .streak-display {
+        padding: 0;
+        margin: 0 auto 20px;
     }
 
     .streak-icon {
