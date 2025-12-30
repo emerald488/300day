@@ -383,7 +383,7 @@ function updateUI() {
 
     // Отображаем номер дня с меткой "ЗАВЕРШЕН" если день выполнен
     if (isDayCompleted) {
-        document.getElementById('dayCounter').innerHTML = `День ${data.currentDay} <span style="color: #4CAF50; font-size: 0.4em; display: block; margin-top: 10px;">✅ ЗАВЕРШЕН</span>`;
+        document.getElementById('dayCounter').innerHTML = `День ${data.currentDay} <span class="day-completed-badge">✅ ЗАВЕРШЕН</span>`;
     } else {
         document.getElementById('dayCounter').textContent = `День ${data.currentDay}`;
     }

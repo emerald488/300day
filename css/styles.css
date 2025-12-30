@@ -98,6 +98,38 @@ body {
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
+.day-completed-badge {
+    color: #4CAF50;
+    font-size: 0.4em;
+    display: block;
+    margin-top: 10px;
+    font-weight: 700;
+    text-shadow:
+        0 0 10px rgba(76, 175, 80, 0.8),
+        0 0 20px rgba(76, 175, 80, 0.6),
+        0 0 30px rgba(76, 175, 80, 0.4),
+        0 0 40px rgba(76, 175, 80, 0.2);
+    animation: greenGlow 2s ease-in-out infinite;
+}
+
+@keyframes greenGlow {
+    0%, 100% {
+        text-shadow:
+            0 0 10px rgba(76, 175, 80, 0.8),
+            0 0 20px rgba(76, 175, 80, 0.6),
+            0 0 30px rgba(76, 175, 80, 0.4),
+            0 0 40px rgba(76, 175, 80, 0.2);
+    }
+    50% {
+        text-shadow:
+            0 0 20px rgba(76, 175, 80, 1),
+            0 0 30px rgba(76, 175, 80, 0.8),
+            0 0 40px rgba(76, 175, 80, 0.6),
+            0 0 50px rgba(76, 175, 80, 0.4),
+            0 0 60px rgba(76, 175, 80, 0.2);
+    }
+}
+
 .subtitle {
     font-size: 1.2em;
     opacity: 0.9;
