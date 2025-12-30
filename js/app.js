@@ -1437,3 +1437,36 @@ document.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('beforeunload', () => {
     stopPlankTimer();
 });
+
+// ==================== SNOWFLAKES EFFECT ====================
+
+function createSnowflakes() {
+    const snowflakesContainer = document.getElementById('snowflakes');
+    if (!snowflakesContainer) return;
+
+    const snowflakeCount = 50; // Количество снежинок
+    const snowflakeChars = ['❄', '❅', '❆']; // Разные символы снежинок
+
+    for (let i = 0; i < snowflakeCount; i++) {
+        const snowflake = document.createElement('div');
+        snowflake.className = 'snowflake';
+        snowflake.textContent = snowflakeChars[Math.floor(Math.random() * snowflakeChars.length)];
+
+        // Случайные параметры для каждой снежинки
+        const startPosition = Math.random() * 100; // Позиция по горизонтали (%)
+        const fontSize = Math.random() * 0.5 + 0.5; // Размер от 0.5em до 1em
+        const duration = Math.random() * 10 + 10; // Длительность падения от 10 до 20 секунд
+        const delay = Math.random() * 5; // Задержка старта от 0 до 5 секунд
+
+        snowflake.style.left = `${startPosition}%`;
+        snowflake.style.fontSize = `${fontSize}em`;
+        snowflake.style.animationDuration = `${duration}s`;
+        snowflake.style.animationDelay = `${delay}s`;
+        snowflake.style.opacity = Math.random() * 0.6 + 0.4; // Прозрачность от 0.4 до 1
+
+        snowflakesContainer.appendChild(snowflake);
+    }
+}
+
+// Запускаем снежинки при загрузке страницы
+createSnowflakes();
