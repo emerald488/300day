@@ -1456,7 +1456,7 @@ function createSnowflakes() {
         const startPosition = Math.random() * 100; // Позиция по горизонтали (%)
         const fontSize = Math.random() * 0.5 + 0.5; // Размер от 0.5em до 1em
         const duration = Math.random() * 10 + 10; // Длительность падения от 10 до 20 секунд
-        const delay = Math.random() * 5; // Задержка старта от 0 до 5 секунд
+        const delay = Math.random() * 20; // Задержка старта от 0 до 20 секунд
 
         snowflake.style.left = `${startPosition}%`;
         snowflake.style.fontSize = `${fontSize}em`;
