@@ -133,6 +133,7 @@ body {
 
 .streak-icon {
     font-size: 3em;
+    animation: flameFlicker 2s ease-in-out infinite;
 }
 
 @keyframes flameFlicker {
@@ -503,29 +504,14 @@ button:not(.btn):not(.nav-item):active {
 }
 
 .day-completed-message {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: 2px solid #8a5dc2;
+    background: #353535;
+    border: 1px solid #4a4a4a;
     border-radius: 16px;
     padding: 30px 24px;
     margin-bottom: 100px;
     text-align: center;
     animation: slideIn 0.5s ease-out;
-    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
-}
-
-/* Streak display внутри фиолетовой плашки */
-.day-completed-message .streak-display {
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    padding: 0;
-    margin: 0 auto 25px;
-    animation: flameFlicker 2s ease-in-out infinite;
-}
-
-.day-completed-message .streak-display:hover {
-    box-shadow: none;
-    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .day-completed-icon {
@@ -853,12 +839,6 @@ body.stories-open .bottom-nav {
         gap: 12px;
         padding: 15px 20px;
         margin: 15px auto;
-    }
-
-    /* Streak display внутри фиолетовой плашки на мобильных */
-    .day-completed-message .streak-display {
-        padding: 0;
-        margin: 0 auto 20px;
     }
 
     .streak-icon {
