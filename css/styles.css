@@ -109,6 +109,61 @@ body {
     text-align: center;
 }
 
+/* Streak Display */
+.streak-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px 30px;
+    margin: 20px auto;
+    max-width: 400px;
+    background: linear-gradient(135deg, rgba(255, 87, 34, 0.15) 0%, rgba(255, 152, 0, 0.15) 100%);
+    border: 2px solid rgba(255, 152, 0, 0.4);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(255, 87, 34, 0.2);
+    transition: all 0.3s ease;
+}
+
+.streak-display:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(255, 87, 34, 0.3);
+    border-color: rgba(255, 152, 0, 0.6);
+}
+
+.streak-icon {
+    font-size: 3em;
+    animation: flameFlicker 2s ease-in-out infinite;
+}
+
+@keyframes flameFlicker {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.streak-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.streak-number {
+    font-size: 2.5em;
+    font-weight: 700;
+    line-height: 1;
+    background: linear-gradient(135deg, #FF5722 0%, #FF9800 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.streak-label {
+    font-size: 0.9em;
+    opacity: 0.85;
+    margin-top: 4px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
 .days-progress-container {
     width: 100%;
     max-width: 600px;
@@ -778,6 +833,24 @@ body.stories-open .bottom-nav {
     .subtitle {
         font-size: 1em;
         min-height: 4.5em;
+    }
+
+    .streak-display {
+        gap: 12px;
+        padding: 15px 20px;
+        margin: 15px auto;
+    }
+
+    .streak-icon {
+        font-size: 2.2em;
+    }
+
+    .streak-number {
+        font-size: 2em;
+    }
+
+    .streak-label {
+        font-size: 0.85em;
     }
 
     .exercise-controls {

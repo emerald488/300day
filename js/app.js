@@ -393,6 +393,12 @@ function updateUI() {
     const formattedDate = new Date().toLocaleDateString('ru-RU', dateOptions);
     document.getElementById('currentDate').textContent = formattedDate;
 
+    // Обновляем streak на главной странице
+    const streakElement = document.getElementById('streakNumber');
+    if (streakElement) {
+        streakElement.textContent = data.streak;
+    }
+
     // Обновляем прогресс-бар дней
     // Если день завершен, показываем текущий день как завершенный
     // Если не завершен, показываем предыдущие завершенные дни
