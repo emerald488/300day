@@ -1510,8 +1510,11 @@ body {
         transform: translateY(0) rotate(0deg);
         opacity: 1;
     }
+    70% {
+        opacity: 0.5;
+    }
     100% {
-        transform: translateY(100vh) rotate(360deg);
-        opacity: 0.3;
+        transform: translateY(350px) rotate(360deg);
+        opacity: 0;
     }
 }
