@@ -160,15 +160,6 @@
                 <div class="day-counter" id="dayCounter" style="font-size: 3.5em; font-weight: 700; margin-bottom: 10px;"></div>
                 <div id="currentDate" style="font-size: 1em; opacity: 0.75; margin-bottom: 15px;"></div>
 
-                <!-- Streak Counter -->
-                <div class="streak-display" id="streakDisplay">
-                    <div class="streak-icon">🔥</div>
-                    <div class="streak-content">
-                        <div class="streak-number" id="streakNumber">0</div>
-                        <div class="streak-label">дней подряд</div>
-                    </div>
-                </div>
-
                 <div class="days-progress-container" style="margin-top: 10px; margin-bottom: 20px;">
                     <div class="days-progress-header">
                         <span>Прогресс челленджа</span>
@@ -183,7 +174,14 @@
 
             <!-- Сообщение о выполненной тренировке -->
             <div id="dayCompletedMessage" class="day-completed-message hidden">
-            <div class="day-completed-icon">⏰</div>
+            <!-- Streak Counter -->
+            <div class="streak-display" id="streakDisplay">
+                <div class="streak-icon">🔥</div>
+                <div class="streak-content">
+                    <div class="streak-number" id="streakNumber">0</div>
+                    <div class="streak-label">дней подряд</div>
+                </div>
+            </div>
             <div class="day-completed-text">
                 <h3>Ты уже выполнил тренировку сегодня!</h3>
                 <p>Новый день начнётся завтра. Отдохни и восстанавливайся! 💪</p>
