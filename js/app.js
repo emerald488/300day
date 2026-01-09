@@ -4,7 +4,7 @@
 const CONFIG = {
     TOTAL_DAYS: 300,
     PLANK_SECONDS_PER_DAY: 3, // 3 секунды прироста в день (итого: день 1 = 3 сек, день 60 = 180 сек = 3 мин)
-    HISTORY_MAX_ENTRIES: 30,
+    HISTORY_MAX_ENTRIES: 300, // Хранить всю историю за весь челлендж
     TOTAL_STORIES: 4,
     UPDATE_CHECK_INTERVAL_MS: 60 * 60 * 1000
 };
